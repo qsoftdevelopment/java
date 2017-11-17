@@ -294,6 +294,7 @@ public class PubNub {
         try {
             subscriptionManager.destroy(true);
             retrofitManager.destroy(true);
+            telemetryManager.stopCleanUpTimer();
         } catch (Exception error) {
             //
         }
