@@ -1387,6 +1387,8 @@ public class SubscriptionManagerTest extends TestHarness {
             }
         };
 
+        assertNotNull("callback is null", sub1);
+
         pubnub.addListener(sub1);
 
         pubnub.presence().channels(Arrays.asList("ch1", "ch2")).connected(false).execute();
