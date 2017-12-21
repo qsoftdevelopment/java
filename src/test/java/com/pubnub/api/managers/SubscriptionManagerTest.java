@@ -41,6 +41,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class SubscriptionManagerTest extends TestHarness {
@@ -1349,6 +1350,8 @@ public class SubscriptionManagerTest extends TestHarness {
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
         };
+
+        assertNotNull("callback is null", sub1);
 
         pubnub.addListener(sub1);
 
