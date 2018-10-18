@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 
 public class PubNubExceptionTest extends TestHarness {
@@ -21,13 +22,13 @@ public class PubNubExceptionTest extends TestHarness {
 
     @Before
     public void beforeEach() throws IOException {
-         PubNub pubnub = this.createPubNubInstance(8080);
+        PubNub pubnub = this.createPubNubInstance(8080);
         instance = pubnub.publish();
         wireMockRule.start();
     }
 
     @Test
-    public void testPubnubError() throws PubNubException, InterruptedException {
+    public void testPubnubError() {
 
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
                 .willReturn(aResponse().withStatus(404).withBody("[1,\"Sent\",\"14598111595318003\"]")));
@@ -36,8 +37,7 @@ public class PubNubExceptionTest extends TestHarness {
 
         try {
             instance.channel("coolChannel").message(new Object()).sync();
-        }
-        catch (PubNubException error) {
+        } catch (PubNubException error) {
             statusCode = error.getStatusCode();
         }
 
