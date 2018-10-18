@@ -761,7 +761,7 @@ public class GrantEndpointTest extends TestHarness {
         partialGrant.authKeys(Collections.singletonList("key1")).channels(Collections.singletonList("ch1")).async(new PNCallback<PNAccessManagerGrantResult>() {
             @Override
             public void onResponse(PNAccessManagerGrantResult result, PNStatus status) {
-                if (status != null && status.getOperation()== PNOperationType.PNAccessManagerGrant) {
+                if (status != null && status.getOperation() == PNOperationType.PNAccessManagerGrant) {
                     atomic.incrementAndGet();
                 }
             }
@@ -894,7 +894,7 @@ public class GrantEndpointTest extends TestHarness {
         partialGrant.channels(Collections.singletonList("ch1")).async(new PNCallback<PNAccessManagerGrantResult>() {
             @Override
             public void onResponse(PNAccessManagerGrantResult result, PNStatus status) {
-                if (status != null && status.getOperation()== PNOperationType.PNAccessManagerGrant && status.isError()) {
+                if (status != null && status.getOperation() == PNOperationType.PNAccessManagerGrant && status.isError()) {
                     atomic.incrementAndGet();
                 }
             }

@@ -4,18 +4,14 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.models.consumer.presence.PNSetStateResult;
 import com.pubnub.api.endpoints.TestHarness;
+import com.pubnub.api.models.consumer.presence.PNSetStateResult;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
@@ -210,7 +206,7 @@ public class SetStateEndpointTest extends TestHarness {
         assertEquals("myKey", requests.get(0).queryParameter("auth").firstValue());
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testNullSubKeySync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/myUUID/data"))
@@ -226,7 +222,7 @@ public class SetStateEndpointTest extends TestHarness {
         partialSetState.channels(Collections.singletonList("testChannel")).state(myState).sync();
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testEmptySubKeySync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/myUUID/data"))
@@ -242,7 +238,7 @@ public class SetStateEndpointTest extends TestHarness {
         partialSetState.channels(Collections.singletonList("testChannel")).state(myState).sync();
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testChannelAndGroupMissingSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/myUUID/data"))
@@ -254,10 +250,10 @@ public class SetStateEndpointTest extends TestHarness {
         Map<String, Object> myState = new HashMap<>();
         myState.put("age", 20);
 
-       partialSetState.state(myState).sync();
+        partialSetState.state(myState).sync();
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testNullPayloadSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/myUUID/data"))

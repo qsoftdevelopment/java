@@ -32,10 +32,14 @@ public class TestHarness {
             }
 
             @Override
-            public String getInstanceId() { return "PubNubInstanceId"; }
+            public String getInstanceId() {
+                return "PubNubInstanceId";
+            }
 
             @Override
-            public String getRequestId() { return "PubNubRequestId"; }
+            public String getRequestId() {
+                return "PubNubRequestId";
+            }
 
         }
 

@@ -2,13 +2,13 @@ package com.pubnub.api.endpoints;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
-import org.awaitility.Awaitility;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.history.PNHistoryResult;
+import org.awaitility.Awaitility;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -22,9 +22,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 public class HistoryEndpointTest extends TestHarness {
@@ -244,7 +242,7 @@ public class HistoryEndpointTest extends TestHarness {
     }
 
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testMissinChannel() throws IOException, PubNubException {
         List<Object> testArray = new ArrayList<>();
         List<Object> historyItems = new ArrayList<>();
@@ -276,7 +274,7 @@ public class HistoryEndpointTest extends TestHarness {
         partialHistory.includeTimetoken(true).sync();
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testChannelIsEmpty() throws PubNubException {
         List<Object> testArray = new ArrayList<>();
         List<Object> historyItems = new ArrayList<>();
@@ -342,7 +340,7 @@ public class HistoryEndpointTest extends TestHarness {
         partialHistory.channel("niceChannel").includeTimetoken(true).async(new PNCallback<PNHistoryResult>() {
             @Override
             public void onResponse(PNHistoryResult result, PNStatus status) {
-                if (status != null && status.getOperation()== PNOperationType.PNHistoryOperation) {
+                if (status != null && status.getOperation() == PNOperationType.PNHistoryOperation) {
                     atomic.incrementAndGet();
                 }
             }
@@ -405,7 +403,7 @@ public class HistoryEndpointTest extends TestHarness {
         assertEquals((response.getMessages().get(1).getEntry()).getAsJsonObject().get("b").getAsInt(), 44);
     }
 
-    @Test(expected=UnsupportedOperationException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void testSyncProcessMessageError() throws IOException, PubNubException {
         List<Object> testArray = new ArrayList<>();
         List<Object> historyItems = new ArrayList<>();

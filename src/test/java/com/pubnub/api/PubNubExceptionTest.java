@@ -11,27 +11,32 @@ import java.io.IOException;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 
 
 public class PubNubExceptionTest extends TestHarness {
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule();
-
+    public WireMockRule wireMockRule;
     private Publish instance;
 
     @Before
     public void beforeEach() throws IOException {
         PubNub pubnub = this.createPubNubInstance(8080);
         instance = pubnub.publish();
+        wireMockRule = new WireMockRule(8080);
         wireMockRule.start();
     }
 
     @Test
     public void testPubnubError() {
-
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
                 .willReturn(aResponse().withStatus(404).withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
+        /*stubFor(get(urlEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+                .withHeader("Accept", equalTo("text/xml"))
+                .willReturn(aResponse()
+                        .withStatus(404)
+                        .withHeader("Content-Type", "text/xml")
+                        .withBody("[1,\"Sent\",\"14598111595318003\"]")));*/
 
         int statusCode = -1;
 
@@ -43,6 +48,5 @@ public class PubNubExceptionTest extends TestHarness {
 
         assertEquals(404, statusCode);
     }
-
 
 }

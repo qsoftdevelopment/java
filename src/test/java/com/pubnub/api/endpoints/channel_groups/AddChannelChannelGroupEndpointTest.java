@@ -95,7 +95,7 @@ public class AddChannelChannelGroupEndpointTest extends TestHarness {
         partialAddChannelChannelGroup.channelGroup("groupA").channels(Arrays.asList("ch1", "ch2")).async(new PNCallback<PNChannelGroupsAddChannelResult>() {
             @Override
             public void onResponse(PNChannelGroupsAddChannelResult result, PNStatus status) {
-                if (status != null && status.getOperation()== PNOperationType.PNAddChannelsToGroupOperation) {
+                if (status != null && status.getOperation() == PNOperationType.PNAddChannelsToGroupOperation) {
                     atomic.incrementAndGet();
                 }
             }
@@ -114,7 +114,7 @@ public class AddChannelChannelGroupEndpointTest extends TestHarness {
         partialAddChannelChannelGroup.channelGroup("groupA").channels(Arrays.asList("ch1", "ch2")).async(new PNCallback<PNChannelGroupsAddChannelResult>() {
             @Override
             public void onResponse(PNChannelGroupsAddChannelResult result, PNStatus status) {
-                if (status != null && status.getOperation()== PNOperationType.PNAddChannelsToGroupOperation) {
+                if (status != null && status.getOperation() == PNOperationType.PNAddChannelsToGroupOperation) {
                     atomic.incrementAndGet();
                 }
             }

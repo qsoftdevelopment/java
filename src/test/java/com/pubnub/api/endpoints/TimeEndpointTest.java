@@ -2,12 +2,12 @@ package com.pubnub.api.endpoints;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
-import org.awaitility.Awaitility;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.callbacks.TimeCallback;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.PNTimeResult;
+import org.awaitility.Awaitility;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -49,21 +49,21 @@ public class TimeEndpointTest extends TestHarness {
 
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testSyncBrokenWithString() throws IOException, PubNubException {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("[abc]")));
         partialTime.sync();
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testSyncBrokenWithoutJSON() throws IOException, PubNubException {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("zimp")));
         partialTime.sync();
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testSyncBrokenWithout200() throws IOException, PubNubException {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("[14593046077243110]").withStatus(404)));
@@ -76,7 +76,7 @@ public class TimeEndpointTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("[14593046077243110]")));
         final AtomicInteger atomic = new AtomicInteger(0);
-        partialTime.async(new TimeCallback(){
+        partialTime.async(new TimeCallback() {
 
             @Override
             public void onResponse(PNTimeResult result, PNStatus status) {
@@ -94,7 +94,7 @@ public class TimeEndpointTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("[14593046077243110]")));
         final AtomicInteger atomic = new AtomicInteger(0);
-        partialTime.async(new TimeCallback(){
+        partialTime.async(new TimeCallback() {
 
             @Override
             public void onResponse(PNTimeResult result, PNStatus status) {
@@ -119,7 +119,7 @@ public class TimeEndpointTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("[abc]")));
         final AtomicInteger atomic = new AtomicInteger(0);
-        partialTime.async(new TimeCallback(){
+        partialTime.async(new TimeCallback() {
 
             @Override
             public void onResponse(PNTimeResult result, PNStatus status) {
@@ -139,7 +139,7 @@ public class TimeEndpointTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("zimp")));
         final AtomicInteger atomic = new AtomicInteger(0);
-        partialTime.async(new TimeCallback(){
+        partialTime.async(new TimeCallback() {
 
             @Override
             public void onResponse(PNTimeResult result, PNStatus status) {
@@ -159,7 +159,7 @@ public class TimeEndpointTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("[14593046077243110]").withStatus(404)));
         final AtomicInteger atomic = new AtomicInteger(0);
-        partialTime.async(new TimeCallback(){
+        partialTime.async(new TimeCallback() {
 
             @Override
             public void onResponse(PNTimeResult result, PNStatus status) {

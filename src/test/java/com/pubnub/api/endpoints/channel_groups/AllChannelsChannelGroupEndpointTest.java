@@ -2,7 +2,6 @@ package com.pubnub.api.endpoints.channel_groups;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
-import org.awaitility.Awaitility;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.callbacks.PNCallback;
@@ -10,6 +9,7 @@ import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAllChannelsResult;
+import org.awaitility.Awaitility;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -46,7 +46,7 @@ public class AllChannelsChannelGroupEndpointTest extends TestHarness {
         assertThat(response.getChannels(), org.hamcrest.Matchers.contains("a", "b"));
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testSyncMissingGroup() throws IOException, PubNubException, InterruptedException {
         stubFor(get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"ChannelGroups\"}")));
@@ -54,7 +54,7 @@ public class AllChannelsChannelGroupEndpointTest extends TestHarness {
         partialAllChannelsChannelGroup.sync();
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testSyncEmptyGroup() throws IOException, PubNubException, InterruptedException {
         stubFor(get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"ChannelGroups\"}")));
@@ -94,7 +94,7 @@ public class AllChannelsChannelGroupEndpointTest extends TestHarness {
         partialAllChannelsChannelGroup.channelGroup("groupA").async(new PNCallback<PNChannelGroupsAllChannelsResult>() {
             @Override
             public void onResponse(PNChannelGroupsAllChannelsResult result, PNStatus status) {
-                if (status != null && status.getOperation()==PNOperationType.PNChannelsForGroupOperation) {
+                if (status != null && status.getOperation() == PNOperationType.PNChannelsForGroupOperation) {
                     atomic.incrementAndGet();
                 }
             }

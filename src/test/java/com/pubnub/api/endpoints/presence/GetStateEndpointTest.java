@@ -22,13 +22,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.findAll;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
 
 
@@ -74,7 +68,7 @@ public class GetStateEndpointTest extends TestHarness {
     }
 
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testFailedPayloadSync() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/sampleUUID"))
@@ -156,7 +150,7 @@ public class GetStateEndpointTest extends TestHarness {
 
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testMissingChannelAndGroupSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/sampleUUID"))
@@ -189,7 +183,7 @@ public class GetStateEndpointTest extends TestHarness {
         partialGetState.channels(Collections.singletonList("testChannel")).uuid("sampleUUID").async(new PNCallback<PNGetStateResult>() {
             @Override
             public void onResponse(PNGetStateResult result, PNStatus status) {
-                if (status != null && status.getOperation()== PNOperationType.PNGetState) {
+                if (status != null && status.getOperation() == PNOperationType.PNGetState) {
                     atomic.incrementAndGet();
                 }
             }
@@ -198,7 +192,7 @@ public class GetStateEndpointTest extends TestHarness {
         Awaitility.await().atMost(5, TimeUnit.SECONDS).untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testNullSubKeySync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/sampleUUID"))
@@ -208,7 +202,7 @@ public class GetStateEndpointTest extends TestHarness {
         partialGetState.channels(Collections.singletonList("testChannel")).uuid("sampleUUID").sync();
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testEmptySubKeySync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/sampleUUID"))

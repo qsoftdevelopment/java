@@ -16,13 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.findAll;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
 
 public class HeartbeatEndpointTest extends TestHarness {
@@ -132,7 +126,7 @@ public class HeartbeatEndpointTest extends TestHarness {
 
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testMissingChannelAndGroupSync() throws PubNubException, InterruptedException {
         pubnub.getConfiguration().setPresenceTimeout(123);
 
@@ -156,7 +150,7 @@ public class HeartbeatEndpointTest extends TestHarness {
         assertEquals("myKey", requests.get(0).queryParameter("auth").firstValue());
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testNullSubKeySync() throws PubNubException, InterruptedException {
         pubnub.getConfiguration().setPresenceTimeout(123);
 
@@ -167,7 +161,7 @@ public class HeartbeatEndpointTest extends TestHarness {
         partialHeartbeat.channels(Arrays.asList("ch1")).sync();
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testEmptySubKeySync() throws PubNubException, InterruptedException {
         pubnub.getConfiguration().setPresenceTimeout(123);
 

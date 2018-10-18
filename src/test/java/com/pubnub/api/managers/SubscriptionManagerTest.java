@@ -3,7 +3,6 @@ package com.pubnub.api.managers;
 import com.github.tomakehurst.wiremock.http.QueryParameter;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
-import org.awaitility.Awaitility;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;
@@ -18,6 +17,7 @@ import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.presence.PNSetStateResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
+import org.awaitility.Awaitility;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -32,17 +32,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.findAll;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.matching;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.junit.Assert.*;
 
 public class SubscriptionManagerTest extends TestHarness {
 
@@ -156,7 +147,7 @@ public class SubscriptionManagerTest extends TestHarness {
     public void testPubNubUnsubscribeAll() {
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2"))
-                .channelGroups(Arrays.asList("cg1","cg2"))
+                .channelGroups(Arrays.asList("cg1", "cg2"))
                 .withPresence()
                 .execute();
 
@@ -313,7 +304,7 @@ public class SubscriptionManagerTest extends TestHarness {
         pubnub.getConfiguration().setRequestMessageCountThreshold(null);
         final AtomicBoolean gotStatus = new AtomicBoolean();
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
-            .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"o\":{\"t\":\"14737141991877032\",\"r\":2},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Message\"},\"b\":\"coolChannel\"}]}")));
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"o\":{\"t\":\"14737141991877032\",\"r\":2},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Message\"},\"b\":\"coolChannel\"}]}")));
 
         pubnub.addListener(new SubscribeCallback() {
             @Override
@@ -342,7 +333,7 @@ public class SubscriptionManagerTest extends TestHarness {
         pubnub.getConfiguration().setRequestMessageCountThreshold(10);
         final AtomicBoolean gotStatus = new AtomicBoolean();
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
-            .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"o\":{\"t\":\"14737141991877032\",\"r\":2},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Message\"},\"b\":\"coolChannel\"}]}")));
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"o\":{\"t\":\"14737141991877032\",\"r\":2},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Message\"},\"b\":\"coolChannel\"}]}")));
 
         pubnub.addListener(new SubscribeCallback() {
             @Override
@@ -400,7 +391,7 @@ public class SubscriptionManagerTest extends TestHarness {
         pubnub.getConfiguration().setRequestMessageCountThreshold(1);
         final AtomicBoolean gotStatus = new AtomicBoolean();
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
-            .willReturn(aResponse().withBody("{\"m\":[{\"a\":\"4\",\"b\":\"coolChannel\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Message\"},\"f\":0,\"i\":\"Client-g5d4g\",\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"o\":{\"r\":2,\"t\":\"14737141991877032\"},\"p\":{\"r\":1,\"t\":\"14607577960925503\"}},{\"a\":\"5\",\"b\":\"coolChannel2\",\"c\":\"coolChannel2\",\"d\":{\"text\":\"Message2\"},\"f\":0,\"i\":\"Client-g5d4g\",\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4g\",\"o\":{\"r\":2,\"t\":\"14737141991877033\"},\"p\":{\"r\":1,\"t\":\"14607577960925504\"}}],\"t\":{\"r\":1,\"t\":\"14607577960932487\"}}")));
+                .willReturn(aResponse().withBody("{\"m\":[{\"a\":\"4\",\"b\":\"coolChannel\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Message\"},\"f\":0,\"i\":\"Client-g5d4g\",\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"o\":{\"r\":2,\"t\":\"14737141991877032\"},\"p\":{\"r\":1,\"t\":\"14607577960925503\"}},{\"a\":\"5\",\"b\":\"coolChannel2\",\"c\":\"coolChannel2\",\"d\":{\"text\":\"Message2\"},\"f\":0,\"i\":\"Client-g5d4g\",\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4g\",\"o\":{\"r\":2,\"t\":\"14737141991877033\"},\"p\":{\"r\":1,\"t\":\"14607577960925504\"}}],\"t\":{\"r\":1,\"t\":\"14607577960932487\"}}")));
 
         pubnub.addListener(new SubscribeCallback() {
             @Override
@@ -437,8 +428,8 @@ public class SubscriptionManagerTest extends TestHarness {
                 if (status.getCategory() == PNStatusCategory.PNAccessDeniedCategory) {
 
                     assertEquals(PNStatusCategory.PNAccessDeniedCategory, status.getCategory());
-                    assertEquals(Arrays.asList(new String[]{"ch1","ch2"}), status.getAffectedChannels());
-                    assertEquals(Arrays.asList(new String[]{"cg1","cg2"}), status.getAffectedChannelGroups());
+                    assertEquals(Arrays.asList(new String[]{"ch1", "ch2"}), status.getAffectedChannels());
+                    assertEquals(Arrays.asList(new String[]{"cg1", "cg2"}), status.getAffectedChannelGroups());
                     gotStatus.addAndGet(1);
                 }
             }
@@ -711,7 +702,7 @@ public class SubscriptionManagerTest extends TestHarness {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching(
                         "/v2/presence/sub-key/" + pubnub.getConfiguration().getSubscribeKey() + "/channel/ch2,ch1/heartbeat.*")));
 
-                for (LoggedRequest request: requests) {
+                for (LoggedRequest request : requests) {
                     String stateString = PubNubUtil.urlDecode(request.queryParameter("state").firstValue());
                     Map<String, Object> actualMap = null;
                     try {
@@ -741,7 +732,8 @@ public class SubscriptionManagerTest extends TestHarness {
                 .state(Arrays.asList("p1", "p2"))
                 .async(new PNCallback<PNSetStateResult>() {
                     @Override
-                    public void onResponse(PNSetStateResult result, PNStatus status) {}
+                    public void onResponse(PNSetStateResult result, PNStatus status) {
+                    }
                 });
 
         Awaitility.await().atMost(5, TimeUnit.SECONDS)
@@ -764,7 +756,7 @@ public class SubscriptionManagerTest extends TestHarness {
             public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
 
-                for (LoggedRequest request: requests) {
+                for (LoggedRequest request : requests) {
                     QueryParameter channelGroupQuery = request.queryParameter("channel-group");
                     if (channelGroupQuery != null && channelGroupQuery.firstValue().equals("cg1,cg2")) {
                         atomic.addAndGet(1);
@@ -801,7 +793,7 @@ public class SubscriptionManagerTest extends TestHarness {
             public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
 
-                for (LoggedRequest request: requests) {
+                for (LoggedRequest request : requests) {
                     String[] channelGroups = request.queryParameter("channel-group").firstValue().split(",");
                     Arrays.sort(channelGroups);
                     if ("cg1,cg1-pnpres,cg2,cg2-pnpres".equals(joinArray(channelGroups))) {
@@ -1258,7 +1250,7 @@ public class SubscriptionManagerTest extends TestHarness {
                     pubnub.unsubscribe().channels(Arrays.asList("ch1")).execute();
                 }
 
-                if (status.getAffectedChannels().size() == 1 && status.getOperation() == PNOperationType.PNUnsubscribeOperation){
+                if (status.getAffectedChannels().size() == 1 && status.getOperation() == PNOperationType.PNUnsubscribeOperation) {
                     if (status.getAffectedChannels().get(0).equals("ch1")) {
                         statusRecieved.set(true);
                     }
@@ -1596,13 +1588,13 @@ public class SubscriptionManagerTest extends TestHarness {
                     pubnub.unsubscribe().channels(Arrays.asList("ch1")).execute();
                 }
 
-                if (status.getAffectedChannels()!=null && status.getAffectedChannels().size() == 1 && status.getOperation() == PNOperationType.PNUnsubscribeOperation){
+                if (status.getAffectedChannels() != null && status.getAffectedChannels().size() == 1 && status.getOperation() == PNOperationType.PNUnsubscribeOperation) {
                     if (status.getAffectedChannels().get(0).equals("ch1")) {
                         pubnub.unsubscribe().channels(Arrays.asList("ch2")).execute();
                     }
                 }
 
-                if (status.getAffectedChannels()!=null && status.getAffectedChannels().size() == 1 && status.getOperation() == PNOperationType.PNUnsubscribeOperation){
+                if (status.getAffectedChannels() != null && status.getAffectedChannels().size() == 1 && status.getOperation() == PNOperationType.PNUnsubscribeOperation) {
                     if (status.getAffectedChannels().get(0).equals("ch2")) {
                         statusRecieved.set(true);
                     }
@@ -1628,7 +1620,7 @@ public class SubscriptionManagerTest extends TestHarness {
 
     private String joinArray(String[] arr) {
         StringBuilder builder = new StringBuilder();
-        for(String s : arr) {
+        for (String s : arr) {
             if (builder.length() != 0) {
                 builder.append(",");
             }

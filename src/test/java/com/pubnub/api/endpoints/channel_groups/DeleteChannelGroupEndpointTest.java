@@ -85,7 +85,7 @@ public class DeleteChannelGroupEndpointTest extends TestHarness {
         partialDeleteChannelGroup.channelGroup("groupA").async(new PNCallback<PNChannelGroupsDeleteGroupResult>() {
             @Override
             public void onResponse(PNChannelGroupsDeleteGroupResult result, PNStatus status) {
-                if (status != null && status.getOperation()==PNOperationType.PNRemoveGroupOperation) {
+                if (status != null && status.getOperation() == PNOperationType.PNRemoveGroupOperation) {
                     atomic.incrementAndGet();
                 }
             }

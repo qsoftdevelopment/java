@@ -11,10 +11,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.Arrays;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.delete;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertNotNull;
 
 
@@ -66,7 +63,7 @@ public class DeleteMessagesEndpointTest extends TestHarness {
         try {
             partialHistory.channels(Arrays.asList("mychannel,my_channel")).sync();
         } catch (PubNubException ex) {
-            assert(ex.getErrormsg().equals("wut"));
+            assert (ex.getErrormsg().equals("wut"));
         }
     }
 
