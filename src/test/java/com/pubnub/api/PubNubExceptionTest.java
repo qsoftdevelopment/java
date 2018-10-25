@@ -31,12 +31,12 @@ public class PubNubExceptionTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
                 .willReturn(aResponse().withStatus(404).withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
-        /*stubFor(get(urlEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+        /*stubFor(get(urlEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel"))
                 .withHeader("Accept", equalTo("text/xml"))
                 .willReturn(aResponse()
                         .withStatus(404)
                         .withHeader("Content-Type", "text/xml")
-                        .withBody("[1,\"Sent\",\"14598111595318003\"]")));*/
+                        .withBody("{\"status\": 404, \"message\": \"OK\"}")));*/
 
         int statusCode = -1;
 
