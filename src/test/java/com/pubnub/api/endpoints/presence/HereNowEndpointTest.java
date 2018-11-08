@@ -10,6 +10,7 @@ import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.presence.PNHereNowResult;
 import org.awaitility.Awaitility;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,21 +22,29 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.assertEquals;
 
 public class HereNowEndpointTest extends TestHarness {
-    private PubNub pubnub;
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule();
+    public WireMockRule wireMockRule = new WireMockRule(options().port(this.PORT), false);
 
+    private PubNub pubnub;
     private HereNow partialHereNow;
 
     @Before
     public void beforeEach() throws IOException {
-        pubnub = this.createPubNubInstance(8080);
+        pubnub = this.createPubNubInstance();
         partialHereNow = pubnub.hereNow();
         wireMockRule.start();
+    }
+
+    @After
+    public void afterEach() {
+        pubnub.destroy();
+        pubnub = null;
+        wireMockRule.stop();
     }
 
     @Test

@@ -5,34 +5,38 @@ import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.assertEquals;
 
 
 public class FetchMessagesEndpointTest extends TestHarness {
 
+    @Rule
+    public WireMockRule wireMockRule = new WireMockRule(options().port(this.PORT), false);
+
     private FetchMessages partialHistory;
     private PubNub pubnub;
 
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule();
-
     @Before
     public void beforeEach() throws IOException {
-        pubnub = this.createPubNubInstance(8080);
+        pubnub = this.createPubNubInstance();
         partialHistory = pubnub.fetchMessages();
         wireMockRule.start();
     }
 
+    @After
+    public void afterEach() {
+        pubnub.destroy();
+        pubnub = null;
+        wireMockRule.stop();
+    }
 
     @Test
     public void testSyncSuccess() throws PubNubException {

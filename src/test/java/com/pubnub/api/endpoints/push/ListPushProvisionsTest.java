@@ -11,6 +11,7 @@ import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.push.PNPushListProvisionsResult;
 import org.awaitility.Awaitility;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,22 +22,29 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.assertEquals;
 
 public class ListPushProvisionsTest extends TestHarness {
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule();
+    public WireMockRule wireMockRule = new WireMockRule(options().port(this.PORT), false);
 
     private ListPushProvisions instance;
     private PubNub pubnub;
 
-
     @Before
     public void beforeEach() throws IOException {
-        pubnub = this.createPubNubInstance(8080);
+        pubnub = this.createPubNubInstance();
         instance = pubnub.auditPushChannelProvisions();
         wireMockRule.start();
+    }
+
+    @After
+    public void afterEach() {
+        pubnub.destroy();
+        pubnub = null;
+        wireMockRule.stop();
     }
 
     @Test

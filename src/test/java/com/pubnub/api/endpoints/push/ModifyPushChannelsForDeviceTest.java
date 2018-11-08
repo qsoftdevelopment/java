@@ -13,6 +13,7 @@ import com.pubnub.api.models.consumer.push.PNPushAddChannelResult;
 import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult;
 import com.pubnub.api.models.consumer.push.PNPushRemoveChannelResult;
 import org.awaitility.Awaitility;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,26 +25,33 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.assertEquals;
 
 public class ModifyPushChannelsForDeviceTest extends TestHarness {
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule();
+    public WireMockRule wireMockRule = new WireMockRule(options().port(this.PORT), false);
 
     private PubNub pubnub;
     private RemoveAllPushChannelsForDevice instance;
     private AddChannelsToPush instanceAdd;
     private RemoveChannelsFromPush instanceRemove;
 
-
     @Before
     public void beforeEach() throws IOException {
-        pubnub = this.createPubNubInstance(8080);
+        pubnub = this.createPubNubInstance();
         instance = pubnub.removeAllPushNotificationsFromDeviceWithPushToken();
         instanceAdd = pubnub.addPushNotificationsOnChannels();
         instanceRemove = pubnub.removePushNotificationsFromChannels();
         wireMockRule.start();
+    }
+
+    @After
+    public void afterEach() {
+        pubnub.destroy();
+        pubnub = null;
+        wireMockRule.stop();
     }
 
     @Test

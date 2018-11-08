@@ -10,6 +10,7 @@ import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerAuditResult;
 import org.awaitility.Awaitility;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,24 +22,30 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.assertEquals;
 
 public class AuditEndpointTest extends TestHarness {
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule();
+    public WireMockRule wireMockRule = new WireMockRule(options().port(this.PORT), false);
 
     private Audit partialAudit;
     private PubNub pubnub;
 
     @Before
     public void beforeEach() throws IOException {
-
-        pubnub = this.createPubNubInstance(8080);
+        pubnub = this.createPubNubInstance();
         pubnub.getConfiguration().setSecretKey("secretKey").setIncludeInstanceIdentifier(true);
         partialAudit = pubnub.audit();
         wireMockRule.start();
+    }
 
+    @After
+    public void afterEach() {
+        pubnub.destroy();
+        pubnub = null;
+        wireMockRule.stop();
     }
 
     @Test
@@ -114,7 +121,7 @@ public class AuditEndpointTest extends TestHarness {
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel-group", matching("cg1"))
                 .withQueryParam("auth", matching("key1"))
-                //.withQueryParam("signature", matching("rXy69MNT1vceNs3Ob6HnjShUAzCV5x4OumSG1lSPL6s="))
+                .withQueryParam("signature", matching("rXy69MNT1vceNs3Ob6HnjShUAzCV5x4OumSG1lSPL6s="))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("timestamp", matching("1337"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"channel-group+auth\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel-group\":\"cg2\",\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\",\"status\":200}")));

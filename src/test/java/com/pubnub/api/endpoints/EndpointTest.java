@@ -4,6 +4,7 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.enums.PNOperationType;
 import okhttp3.Request;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,8 +22,14 @@ public class EndpointTest extends TestHarness {
 
     @Before
     public void beforeEach() throws IOException {
-        pubnub = this.createPubNubInstance(8080);
+        pubnub = this.createPubNubInstance();
         pubnub.getConfiguration().setIncludeInstanceIdentifier(true);
+    }
+
+    @After
+    public void afterEach() {
+        pubnub.destroy();
+        pubnub = null;
     }
 
     @Test

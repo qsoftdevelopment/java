@@ -8,6 +8,7 @@ import com.pubnub.api.callbacks.TimeCallback;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.PNTimeResult;
 import org.awaitility.Awaitility;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,23 +19,31 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TimeEndpointTest extends TestHarness {
+
+    @Rule
+    public WireMockRule wireMockRule = new WireMockRule(options().port(this.PORT), false);
+
     private Time partialTime;
     private PubNub pubnub;
 
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule();
-
     @Before
     public void beforeEach() throws IOException {
-        pubnub = this.createPubNubInstance(8080);
+        pubnub = this.createPubNubInstance();
         partialTime = pubnub.time();
         wireMockRule.start();
     }
 
+    @After
+    public void afterEach() {
+        pubnub.destroy();
+        pubnub = null;
+        wireMockRule.stop();
+    }
 
     @Test
     public void testSyncSuccess() throws IOException, PubNubException, InterruptedException {

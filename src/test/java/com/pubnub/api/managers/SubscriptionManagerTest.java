@@ -33,25 +33,28 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.*;
 
 public class SubscriptionManagerTest extends TestHarness {
+
+    @Rule
+    public WireMockRule wireMockRule = new WireMockRule(options().port(this.PORT), false);
 
     private PubNub pubnub;
 
     @Before
     public void beforeEach() throws IOException {
-        pubnub = this.createPubNubInstance(8080);
+        pubnub = this.createPubNubInstance();
         wireMockRule.start();
     }
 
     @After
     public void afterEach() {
         pubnub.destroy();
+        pubnub = null;
+        wireMockRule.stop();
     }
-
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule();
 
     @Test
     public void testGetSubscribedChannels() {
@@ -743,7 +746,8 @@ public class SubscriptionManagerTest extends TestHarness {
 
     @Test
     public void testSubscribeChannelGroupBuilder() {
-        final AtomicInteger atomic = new AtomicInteger(0);
+        final AtomicBoolean atomic = new AtomicBoolean(false);
+
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/,/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
 
@@ -759,7 +763,7 @@ public class SubscriptionManagerTest extends TestHarness {
                 for (LoggedRequest request : requests) {
                     QueryParameter channelGroupQuery = request.queryParameter("channel-group");
                     if (channelGroupQuery != null && channelGroupQuery.firstValue().equals("cg1,cg2")) {
-                        atomic.addAndGet(1);
+                        atomic.set(true);
                     }
                 }
 
@@ -770,12 +774,9 @@ public class SubscriptionManagerTest extends TestHarness {
             }
         });
 
-
         pubnub.subscribe().channelGroups(Arrays.asList("cg1", "cg2")).execute();
 
-        Awaitility.await().atMost(5, TimeUnit.SECONDS)
-                .untilAtomic(atomic, org.hamcrest.Matchers.greaterThan(0));
-
+        Awaitility.await().atMost(5, TimeUnit.SECONDS).untilTrue(atomic);
     }
 
     @Test
@@ -819,12 +820,13 @@ public class SubscriptionManagerTest extends TestHarness {
 
     @Test
     public void testSubscribeWithFilterExpressionBuilder() {
-        final AtomicInteger atomic = new AtomicInteger(0);
+        final AtomicBoolean atomic = new AtomicBoolean(false);
+
         pubnub.getConfiguration().setFilterExpression("much=filtering");
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
-                .withQueryParam("filter-expr", matching("much%3Dfiltering"))
+                .withQueryParam("filter-expr", matching("much=filtering"))
                 .withQueryParam("tt", matching("0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
 
@@ -837,7 +839,7 @@ public class SubscriptionManagerTest extends TestHarness {
             public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
                 assertTrue(requests.size() > 0);
-                atomic.addAndGet(1);
+                atomic.set(true);
             }
 
             @Override
@@ -845,12 +847,9 @@ public class SubscriptionManagerTest extends TestHarness {
             }
         });
 
-
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
 
-        Awaitility.await().atMost(5, TimeUnit.SECONDS)
-                .untilAtomic(atomic, org.hamcrest.Matchers.greaterThan(0));
-
+        Awaitility.await().atMost(5, TimeUnit.SECONDS).untilTrue(atomic);
     }
 
     @Test

@@ -4,6 +4,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -12,24 +13,31 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.assertNotNull;
 
 
 public class DeleteMessagesEndpointTest extends TestHarness {
 
+    @Rule
+    public WireMockRule wireMockRule = new WireMockRule(options().port(this.PORT), false);
+
     private DeleteMessages partialHistory;
     private PubNub pubnub;
 
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule();
-
     @Before
     public void beforeEach() throws IOException {
-        pubnub = this.createPubNubInstance(8080);
+        pubnub = this.createPubNubInstance();
         partialHistory = pubnub.deleteMessages();
         wireMockRule.start();
     }
 
+    @After
+    public void afterEach() {
+        pubnub.destroy();
+        pubnub = null;
+        wireMockRule.stop();
+    }
 
     @Test
     public void testSyncSuccess() throws PubNubException {

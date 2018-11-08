@@ -11,6 +11,7 @@ import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerKeyData;
 import org.awaitility.Awaitility;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,25 +21,33 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.assertEquals;
 
 public class GrantEndpointTest extends TestHarness {
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule();
+    public WireMockRule wireMockRule = new WireMockRule(options().port(this.PORT), false);
 
     private Grant partialGrant;
     private PubNub pubnub;
 
     @Before
     public void beforeEach() throws IOException {
-        pubnub = this.createPubNubInstance(8080);
+        pubnub = this.createPubNubInstance();
         partialGrant = pubnub.grant();
         pubnub.getConfiguration().setSecretKey("secretKey").setIncludeInstanceIdentifier(true);
         wireMockRule.start();
+    }
+
+    @After
+    public void afterEach() {
+        pubnub.destroy();
+        pubnub = null;
+        wireMockRule.stop();
     }
 
     @Test
@@ -743,12 +752,13 @@ public class GrantEndpointTest extends TestHarness {
 
     @Test
     public void testOperationTypeSuccessAsync() throws IOException, PubNubException, InterruptedException {
+        AtomicBoolean atomic = new AtomicBoolean(false);
 
         stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
                 .withQueryParam("auth", matching("key1"))
-                .withQueryParam("signature", matching("HlyfXDFhdgNhKfBzGaouxh2T2SRimm4bVq_JVKLRPQI="))
+                .withQueryParam("signature", matching("nUZe6LEDe2RGPeh4qoe-IpjAYzBf8RJMtSXI7ktaah8="))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
@@ -756,18 +766,16 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("m", matching("0"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1,\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}},\"service\":\"Access Manager\",\"status\":200}")));
 
-        final AtomicInteger atomic = new AtomicInteger(0);
-
         partialGrant.authKeys(Collections.singletonList("key1")).channels(Collections.singletonList("ch1")).async(new PNCallback<PNAccessManagerGrantResult>() {
             @Override
             public void onResponse(PNAccessManagerGrantResult result, PNStatus status) {
                 if (status != null && status.getOperation() == PNOperationType.PNAccessManagerGrant) {
-                    atomic.incrementAndGet();
+                    atomic.set(true);
                 }
             }
         });
 
-        Awaitility.await().atMost(5, TimeUnit.SECONDS).untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
+        Awaitility.await().atMost(5, TimeUnit.SECONDS).untilTrue(atomic);
     }
 
     @Test
@@ -877,12 +885,13 @@ public class GrantEndpointTest extends TestHarness {
     @Test
     public void testNullAuthKeyAsync() throws PubNubException {
 
-        final AtomicInteger atomic = new AtomicInteger(0);
+        AtomicBoolean atomic = new AtomicBoolean(false);
 
         stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
-                .withQueryParam("signature", matching("HlyfXDFhdgNhKfBzGaouxh2T2SRimm4bVq_JVKLRPQI="))
+                //.withQueryParam("signature", matching("HlyfXDFhdgNhKfBzGaouxh2T2SRimm4bVq_JVKLRPQI="))
+                .withQueryParam("signature", matching("uj_YKE1IA08QawOIxbxzcd_lyCk2avtY2R48hIXpWdg="))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
@@ -890,17 +899,16 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("m", matching("0"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1,\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}},\"service\":\"Access Manager\",\"status\":200}")));
 
-
         partialGrant.channels(Collections.singletonList("ch1")).async(new PNCallback<PNAccessManagerGrantResult>() {
             @Override
             public void onResponse(PNAccessManagerGrantResult result, PNStatus status) {
-                if (status != null && status.getOperation() == PNOperationType.PNAccessManagerGrant && status.isError()) {
-                    atomic.incrementAndGet();
+                if (status != null && status.getOperation() == PNOperationType.PNAccessManagerGrant && !status.isError()) {
+                    atomic.set(true);
                 }
             }
         });
 
-        Awaitility.await().atMost(5, TimeUnit.SECONDS).untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
+        Awaitility.await().atMost(5, TimeUnit.SECONDS).untilTrue(atomic);
     }
 
 }
