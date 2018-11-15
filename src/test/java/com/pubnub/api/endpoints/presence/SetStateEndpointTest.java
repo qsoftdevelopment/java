@@ -49,12 +49,14 @@ public class SetStateEndpointTest extends TestHarness {
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 //.withQueryParam("state", matching("%7B%22age%22%3A20%7D"))
                 .withQueryParam("state", equalToJson("{\"age\":20}"))
-                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : " +
+                        "20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
         Map<String, Object> myState = new HashMap<>();
         myState.put("age", 20);
 
-        PNSetStateResult result = partialSetState.channels(Collections.singletonList("testChannel")).state(myState).sync();
+        PNSetStateResult result =
+                partialSetState.channels(Collections.singletonList("testChannel")).state(myState).sync();
         assertEquals(pubnub.getMapper().elementToInt(result.getState(), "age"), 20);
         assertEquals(pubnub.getMapper().elementToString(result.getState(), "status"), "online");
 
@@ -70,12 +72,15 @@ public class SetStateEndpointTest extends TestHarness {
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 //.withQueryParam("state", matching("%7B%22age%22%3A20%7D"))
                 .withQueryParam("state", equalToJson("{\"age\":20}"))
-                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : " +
+                        "20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
         Map<String, Object> myState = new HashMap<>();
         myState.put("age", 20);
 
-        PNSetStateResult result = partialSetState.channels(Collections.singletonList("testChannel")).state(myState).uuid("someoneElseUUID").sync();
+        PNSetStateResult result =
+                partialSetState.channels(Collections.singletonList("testChannel")).state(myState).uuid(
+                        "someoneElseUUID").sync();
         assertEquals(pubnub.getMapper().elementToInt(result.getState(), "age"), 20);
         assertEquals(pubnub.getMapper().elementToString(result.getState(), "status"), "online");
 
@@ -86,17 +91,20 @@ public class SetStateEndpointTest extends TestHarness {
     @Test
     public void applyStateForChannelsSync() throws PubNubException, InterruptedException {
 
-        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel,testChannel2/uuid/myUUID/data"))
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel," +
+                "testChannel2/uuid/myUUID/data"))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 //.withQueryParam("state", matching("%7B%22age%22%3A20%7D"))
                 .withQueryParam("state", equalToJson("{\"age\":20}"))
-                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : " +
+                        "20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
         Map<String, Object> myState = new HashMap<>();
         myState.put("age", 20);
 
-        PNSetStateResult result = partialSetState.channels(Arrays.asList("testChannel", "testChannel2")).state(myState).sync();
+        PNSetStateResult result =
+                partialSetState.channels(Arrays.asList("testChannel", "testChannel2")).state(myState).sync();
         assertEquals(pubnub.getMapper().elementToInt(result.getState(), "age"), 20);
         assertEquals(pubnub.getMapper().elementToString(result.getState(), "status"), "online");
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
@@ -111,7 +119,8 @@ public class SetStateEndpointTest extends TestHarness {
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 //.withQueryParam("state", matching("%7B%22age%22%3A20%7D"))
                 .withQueryParam("state", equalToJson("{\"age\":20}"))
-                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : " +
+                        "20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
         Map<String, Object> myState = new HashMap<>();
         myState.put("age", 20);
@@ -134,7 +143,8 @@ public class SetStateEndpointTest extends TestHarness {
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 //.withQueryParam("state", matching("%7B%22age%22%3A20%7D"))
                 .withQueryParam("state", equalToJson("{\"age\":20}"))
-                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : " +
+                        "20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
         Map<String, Object> myState = new HashMap<>();
         myState.put("age", 20);
@@ -158,12 +168,14 @@ public class SetStateEndpointTest extends TestHarness {
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 //.withQueryParam("state", matching("%7B%22age%22%3A20%7D"))
                 .withQueryParam("state", equalToJson("{\"age\":20}"))
-                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : " +
+                        "20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
         Map<String, Object> myState = new HashMap<>();
         myState.put("age", 20);
 
-        PNSetStateResult result = partialSetState.channels(Collections.singletonList("ch1")).channelGroups(Arrays.asList("cg1", "cg2")).state(myState).sync();
+        PNSetStateResult result =
+                partialSetState.channels(Collections.singletonList("ch1")).channelGroups(Arrays.asList("cg1", "cg2")).state(myState).sync();
 
         assertEquals(pubnub.getMapper().elementToInt(result.getState(), "age"), 20);
         assertEquals(pubnub.getMapper().elementToString(result.getState(), "status"), "online");
@@ -180,7 +192,8 @@ public class SetStateEndpointTest extends TestHarness {
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("state", matching("%7B%22status%22%3A%22oneline%22%2C%22age%22%3A20%7D"))
-                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}").withStatus(400)));
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : " +
+                        "20, \"status\" : \"online\" }, \"service\": \"Presence\"}").withStatus(400)));
 
 
         Map<String, Object> myState = new HashMap<>();
@@ -195,7 +208,8 @@ public class SetStateEndpointTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/myUUID/data"))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
-                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : " +
+                        "20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
         partialSetState.channels(Collections.singletonList("testChannel")).sync();
     }
@@ -207,7 +221,8 @@ public class SetStateEndpointTest extends TestHarness {
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 //.withQueryParam("state", matching("%7B%22age%22%3A20%7D"))
                 .withQueryParam("state", equalToJson("{\"age\":20}"))
-                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : " +
+                        "20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
         Map<String, Object> myState = new HashMap<>();
         myState.put("age", 20);
@@ -227,7 +242,8 @@ public class SetStateEndpointTest extends TestHarness {
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("state", matching("%7B%22age%22%3A20%7D"))
-                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : " +
+                        "20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
         Map<String, Object> myState = new HashMap<>();
         myState.put("age", 20);
@@ -243,7 +259,8 @@ public class SetStateEndpointTest extends TestHarness {
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("state", matching("%7B%22age%22%3A20%7D"))
-                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : " +
+                        "20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
         Map<String, Object> myState = new HashMap<>();
         myState.put("age", 20);
@@ -259,7 +276,8 @@ public class SetStateEndpointTest extends TestHarness {
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("state", matching("%7B%22age%22%3A20%7D"))
-                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : " +
+                        "20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
         Map<String, Object> myState = new HashMap<>();
         myState.put("age", 20);

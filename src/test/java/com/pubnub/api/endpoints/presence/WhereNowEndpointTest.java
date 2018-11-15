@@ -50,7 +50,8 @@ public class WhereNowEndpointTest extends TestHarness {
     @Test
     public void testSyncSuccess() throws IOException, PubNubException, InterruptedException {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": " +
+                        "[\"a\",\"b\"]}, \"service\": \"Presence\"}")));
 
         PNWhereNowResult response = partialWhereNow.sync();
         assertThat(response.getChannels(), org.hamcrest.Matchers.contains("a", "b"));
@@ -60,7 +61,8 @@ public class WhereNowEndpointTest extends TestHarness {
     public void testSyncSuccessCustomUUID() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/customUUID"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": " +
+                        "[\"a\",\"b\"]}, \"service\": \"Presence\"}")));
 
         PNWhereNowResult response = partialWhereNow.uuid("customUUID").sync();
         assertThat(response.getChannels(), org.hamcrest.Matchers.contains("a", "b"));
@@ -70,7 +72,8 @@ public class WhereNowEndpointTest extends TestHarness {
     public void testSyncBrokenWithString() throws IOException, PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [zimp]}, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": " +
+                        "[zimp]}, \"service\": \"Presence\"}")));
 
         partialWhereNow.sync();
     }
@@ -79,7 +82,8 @@ public class WhereNowEndpointTest extends TestHarness {
     public void testSyncBrokenWithoutJSON() throws IOException, PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": zimp}, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": " +
+                        "zimp}, \"service\": \"Presence\"}")));
 
         partialWhereNow.sync();
     }
@@ -90,7 +94,8 @@ public class WhereNowEndpointTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
                 .willReturn(aResponse()
                         .withStatus(404)
-                        .withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"Presence\"}")));
+                        .withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}," +
+                                " \"service\": \"Presence\"}")));
 
         partialWhereNow.sync();
     }
@@ -99,7 +104,8 @@ public class WhereNowEndpointTest extends TestHarness {
     public void testAsyncSuccess() throws IOException, PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": " +
+                        "[\"a\",\"b\"]}, \"service\": \"Presence\"}")));
 
         final AtomicInteger atomic = new AtomicInteger(0);
         partialWhereNow.async(new WhereNowCallback() {
@@ -118,7 +124,8 @@ public class WhereNowEndpointTest extends TestHarness {
     public void testAsyncBrokenWithString() throws IOException, PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [zimp]}, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": " +
+                        "[zimp]}, \"service\": \"Presence\"}")));
 
         final AtomicInteger atomic = new AtomicInteger(0);
         partialWhereNow.async(new WhereNowCallback() {
@@ -137,7 +144,8 @@ public class WhereNowEndpointTest extends TestHarness {
     public void testAsyncBrokenWithoutJSON() throws IOException, PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": zimp}, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": " +
+                        "zimp}, \"service\": \"Presence\"}")));
 
         final AtomicInteger atomic = new AtomicInteger(0);
         partialWhereNow.async(new WhereNowCallback() {
@@ -158,7 +166,8 @@ public class WhereNowEndpointTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
                 .willReturn(aResponse()
                         .withStatus(400)
-                        .withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"Presence\"}")));
+                        .withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}," +
+                                " \"service\": \"Presence\"}")));
 
         final AtomicInteger atomic = new AtomicInteger(0);
         partialWhereNow.async(new WhereNowCallback() {
@@ -177,7 +186,8 @@ public class WhereNowEndpointTest extends TestHarness {
     public void testIsAuthRequiredSuccessSync() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": " +
+                        "[\"a\",\"b\"]}, \"service\": \"Presence\"}")));
 
         pubnub.getConfiguration().setAuthKey("myKey");
         partialWhereNow.sync();
@@ -191,7 +201,8 @@ public class WhereNowEndpointTest extends TestHarness {
     public void testNullSubKeySync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": " +
+                        "[\"a\",\"b\"]}, \"service\": \"Presence\"}")));
 
         pubnub.getConfiguration().setSubscribeKey(null);
         partialWhereNow.sync();
@@ -201,7 +212,8 @@ public class WhereNowEndpointTest extends TestHarness {
     public void testEmptySubKeySync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": " +
+                        "[\"a\",\"b\"]}, \"service\": \"Presence\"}")));
 
         pubnub.getConfiguration().setSubscribeKey("");
         partialWhereNow.sync();

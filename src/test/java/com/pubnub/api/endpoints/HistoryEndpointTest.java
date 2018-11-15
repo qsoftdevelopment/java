@@ -51,7 +51,9 @@ public class HistoryEndpointTest extends TestHarness {
 
     @Test
     public void testSyncDisabled() {
-        String payload = "[[\"Use of the history API requires the Storage & Playback add-on which is not enabled for this subscribe key. Login to your PubNub Dashboard Account and ADD the Storage & Playback add-on. Contact support@pubnub.com if you require further assistance.\"],0,0]";
+        String payload = "[[\"Use of the history API requires the Storage & Playback add-on which is not enabled for " +
+                "this subscribe key. Login to your PubNub Dashboard Account and ADD the Storage & Playback add-on. " +
+                "Contact support@pubnub.com if you require further assistance.\"],0,0]";
 
         stubFor(get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
                 .willReturn(aResponse().withBody(payload)));
@@ -65,7 +67,9 @@ public class HistoryEndpointTest extends TestHarness {
 
     @Test
     public void testSyncWithTokensDisabled() {
-        String payload = "[\"Use of the history API requires the Storage & Playback which is not enabled for this subscribe key.Login to your PubNub Dashboard Account and enable Storage & Playback.Contact support @pubnub.com if you require further assistance.\",0,0]";
+        String payload = "[\"Use of the history API requires the Storage & Playback which is not enabled for this " +
+                "subscribe key.Login to your PubNub Dashboard Account and enable Storage & Playback.Contact support " +
+                "@pubnub.com if you require further assistance.\",0,0]";
 
         stubFor(get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
                 .willReturn(aResponse().withBody(payload)));
@@ -167,7 +171,9 @@ public class HistoryEndpointTest extends TestHarness {
         pubnub.getConfiguration().setCipherKey("testCipher");
 
         stubFor(get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
-                .willReturn(aResponse().withBody("[[\"EGwV+Ti43wh2TprPIq7o0KMuW5j6B3yWy352ucWIOmU=\\n\",\"EGwV+Ti43wh2TprPIq7o0KMuW5j6B3yWy352ucWIOmU=\\n\",\"EGwV+Ti43wh2TprPIq7o0KMuW5j6B3yWy352ucWIOmU=\\n\"],14606134331557853,14606134485013970]")));
+                .willReturn(aResponse().withBody("[[\"EGwV+Ti43wh2TprPIq7o0KMuW5j6B3yWy352ucWIOmU=\\n\"," +
+                        "\"EGwV+Ti43wh2TprPIq7o0KMuW5j6B3yWy352ucWIOmU=\\n\"," +
+                        "\"EGwV+Ti43wh2TprPIq7o0KMuW5j6B3yWy352ucWIOmU=\\n\"],14606134331557853,14606134485013970]")));
 
         PNHistoryResult response = partialHistory.channel("niceChannel").includeTimetoken(false).sync();
 
@@ -196,7 +202,8 @@ public class HistoryEndpointTest extends TestHarness {
         pubnub.getConfiguration().setCipherKey("hello");
 
         stubFor(get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
-                .willReturn(aResponse().withBody("[[{\"pn_other\":\"6QoqmS9CnB3W9+I4mhmL7w==\"}],14606134331557852,14606134485013970]")));
+                .willReturn(aResponse().withBody("[[{\"pn_other\":\"6QoqmS9CnB3W9+I4mhmL7w==\"}],14606134331557852," +
+                        "14606134485013970]")));
 
         PNHistoryResult response = partialHistory.channel("niceChannel").includeTimetoken(false).sync();
 
@@ -206,7 +213,9 @@ public class HistoryEndpointTest extends TestHarness {
         assertEquals(response.getMessages().size(), 1);
 
         assertEquals(response.getMessages().get(0).getTimetoken(), null);
-        assertEquals("hey", response.getMessages().get(0).getEntry().getAsJsonObject().get("pn_other").getAsJsonObject().get("text").getAsString());
+        assertEquals("hey",
+                response.getMessages().get(0).getEntry().getAsJsonObject().get("pn_other").getAsJsonObject().get(
+                        "text").getAsString());
 
     }
 
@@ -387,9 +396,11 @@ public class HistoryEndpointTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
                 .willReturn(aResponse().withBody(pubnub.getMapper().toJson(testArray))));
 
-        PNHistoryResult response = partialHistory.channel("niceChannel").count(5).reverse(true).start(1L).end(2L).includeTimetoken(true).sync();
+        PNHistoryResult response =
+                partialHistory.channel("niceChannel").count(5).reverse(true).start(1L).end(2L).includeTimetoken(true).sync();
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/history/sub-key/mySubscribeKey/channel/niceChannel.*")));
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/history/sub-key/mySubscribeKey" +
+                "/channel/niceChannel.*")));
         assertTrue(requests.get(0).queryParameter("reverse").firstValue().equals("true"));
         assertTrue(Integer.valueOf(requests.get(0).queryParameter("count").firstValue()).equals(5));
         assertTrue(Integer.valueOf(requests.get(0).queryParameter("start").firstValue()).equals(1));

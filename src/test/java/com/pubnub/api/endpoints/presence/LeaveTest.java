@@ -52,7 +52,8 @@ public class LeaveTest extends TestHarness {
     public void subscribeChannelSync() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/coolChannel/leave"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", " +
+                        "\"action\": \"leave\"}")));
 
         instance.channels(Arrays.asList("coolChannel")).sync();
 
@@ -65,7 +66,8 @@ public class LeaveTest extends TestHarness {
     public void subscribeChannelsSync() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/coolChannel,coolChannel2/leave"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", " +
+                        "\"action\": \"leave\"}")));
 
         instance.channels(Arrays.asList("coolChannel", "coolChannel2")).sync();
 
@@ -78,7 +80,8 @@ public class LeaveTest extends TestHarness {
     public void subscribeChannelsWithGroupSync() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/coolChannel,coolChannel2/leave"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", " +
+                        "\"action\": \"leave\"}")));
 
         instance.channels(Arrays.asList("coolChannel", "coolChannel2")).channelGroups(Arrays.asList("cg1")).sync();
 
@@ -93,7 +96,8 @@ public class LeaveTest extends TestHarness {
         final AtomicBoolean statusArrived = new AtomicBoolean();
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/coolChannel,coolChannel2/leave"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", " +
+                        "\"action\": \"leave\"}")));
 
         instance.channels(Arrays.asList("coolChannel", "coolChannel2")).channelGroups(Arrays.asList("cg1")).async(new PNCallback<Boolean>() {
             @Override
@@ -106,14 +110,16 @@ public class LeaveTest extends TestHarness {
         });
 
 
-        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(statusArrived, org.hamcrest.core.IsEqual.equalTo(true));
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(statusArrived,
+                org.hamcrest.core.IsEqual.equalTo(true));
     }
 
     @Test
     public void subscribeGroupsSync() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/,/leave"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", " +
+                        "\"action\": \"leave\"}")));
 
         instance.channelGroups(Arrays.asList("cg1", "cg2")).sync();
 
@@ -126,7 +132,8 @@ public class LeaveTest extends TestHarness {
     public void subscribeGroupSync() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/,/leave"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", " +
+                        "\"action\": \"leave\"}")));
 
         instance.channelGroups(Arrays.asList("cg1")).sync();
 
@@ -139,7 +146,8 @@ public class LeaveTest extends TestHarness {
     public void testMissingChannelAndGroupSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/coolChannel/leave"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", " +
+                        "\"action\": \"leave\"}")));
 
         instance.sync();
     }
@@ -148,7 +156,8 @@ public class LeaveTest extends TestHarness {
     public void testNullSubKeySync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/coolChannel/leave"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", " +
+                        "\"action\": \"leave\"}")));
 
         pubnub.getConfiguration().setSubscribeKey(null);
         instance.sync();
@@ -158,7 +167,8 @@ public class LeaveTest extends TestHarness {
     public void testEmptySubKeySync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/coolChannel/leave"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", " +
+                        "\"action\": \"leave\"}")));
 
         pubnub.getConfiguration().setSubscribeKey("");
         instance.sync();
@@ -168,7 +178,8 @@ public class LeaveTest extends TestHarness {
     public void testIsAuthRequiredSuccessSync() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/coolChannel/leave"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", " +
+                        "\"action\": \"leave\"}")));
 
         pubnub.getConfiguration().setAuthKey("myKey");
         instance.channels(Arrays.asList("coolChannel")).sync();

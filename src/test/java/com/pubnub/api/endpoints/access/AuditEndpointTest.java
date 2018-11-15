@@ -59,9 +59,14 @@ public class AuditEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1"))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("timestamp", matching("1337"))
-                .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"channel-group+auth\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel-group\":\"cg2\",\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\",\"status\":200}")));
+                .willReturn(aResponse().withBody("{\"message\":\"Success\"," +
+                        "\"payload\":{\"level\":\"channel-group+auth\"," +
+                        "\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel-group\":\"cg2\"," +
+                        "\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\"," +
+                        "\"status\":200}")));
 
-        PNAccessManagerAuditResult pnAccessManagerAuditResult = partialAudit.channelGroup("cg1").authKeys(Collections.singletonList("key1")).sync();
+        PNAccessManagerAuditResult pnAccessManagerAuditResult =
+                partialAudit.channelGroup("cg1").authKeys(Collections.singletonList("key1")).sync();
 
         assertEquals("cg2", pnAccessManagerAuditResult.getChannelGroup());
         assertEquals(true, pnAccessManagerAuditResult.getAuthKeys().get("key1").isManageEnabled());
@@ -87,9 +92,13 @@ public class AuditEndpointTest extends TestHarness {
                 .withQueryParam("requestid", matching("PubNubRequestId"))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("timestamp", matching("1337"))
-                .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\",\"status\":200}")));
+                .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\"," +
+                        "\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel\":\"ch1\"," +
+                        "\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\"," +
+                        "\"status\":200}")));
 
-        PNAccessManagerAuditResult pnAccessManagerAuditResult = partialAudit.channel("ch1").authKeys(Collections.singletonList("key1")).sync();
+        PNAccessManagerAuditResult pnAccessManagerAuditResult =
+                partialAudit.channel("ch1").authKeys(Collections.singletonList("key1")).sync();
 
         assertEquals("ch1", pnAccessManagerAuditResult.getChannel());
         assertEquals(true, pnAccessManagerAuditResult.getAuthKeys().get("key1").isManageEnabled());
@@ -124,7 +133,11 @@ public class AuditEndpointTest extends TestHarness {
                 .withQueryParam("signature", matching("rXy69MNT1vceNs3Ob6HnjShUAzCV5x4OumSG1lSPL6s="))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("timestamp", matching("1337"))
-                .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"channel-group+auth\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel-group\":\"cg2\",\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\",\"status\":200}")));
+                .willReturn(aResponse().withBody("{\"message\":\"Success\"," +
+                        "\"payload\":{\"level\":\"channel-group+auth\"," +
+                        "\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel-group\":\"cg2\"," +
+                        "\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\"," +
+                        "\"status\":200}")));
 
         final AtomicInteger atomic = new AtomicInteger(0);
 
@@ -151,7 +164,11 @@ public class AuditEndpointTest extends TestHarness {
                 .withQueryParam("requestid", matching("PubNubRequestId"))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("timestamp", matching("1337"))
-                .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"channel-group+auth\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel-group\":\"cg2\",\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\",\"status\":200}")));
+                .willReturn(aResponse().withBody("{\"message\":\"Success\"," +
+                        "\"payload\":{\"level\":\"channel-group+auth\"," +
+                        "\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel-group\":\"cg2\"," +
+                        "\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\"," +
+                        "\"status\":200}")));
 
         pubnub.getConfiguration().setAuthKey("myKey");
 
@@ -175,7 +192,8 @@ public class AuditEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1"))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("timestamp", matching("1337"))
-                .willReturn(aResponse().withBody("{\"message\":\"Success\",\"service\":\"Access Manager\",\"status\":200}")));
+                .willReturn(aResponse().withBody("{\"message\":\"Success\",\"service\":\"Access Manager\"," +
+                        "\"status\":200}")));
 
         try {
             partialAudit.channelGroup("cg1").authKeys(Collections.singletonList("key1")).sync();

@@ -51,7 +51,12 @@ public class HereNowEndpointTest extends TestHarness {
     public void testMultipleChannelStateSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/ch1,ch2"))
-                .willReturn(aResponse().withBody("{\"status\":200,\"message\":\"OK\",\"payload\":{\"total_occupancy\":3,\"total_channels\":2,\"channels\":{\"ch1\":{\"occupancy\":1,\"uuids\":[{\"uuid\":\"user1\",\"state\":{\"age\":10}}]},\"ch2\":{\"occupancy\":2,\"uuids\":[{\"uuid\":\"user1\",\"state\":{\"age\":10}},{\"uuid\":\"user3\",\"state\":{\"age\":30}}]}}},\"service\":\"Presence\"}")));
+                .willReturn(aResponse().withBody("{\"status\":200,\"message\":\"OK\"," +
+                        "\"payload\":{\"total_occupancy\":3,\"total_channels\":2," +
+                        "\"channels\":{\"ch1\":{\"occupancy\":1,\"uuids\":[{\"uuid\":\"user1\"," +
+                        "\"state\":{\"age\":10}}]},\"ch2\":{\"occupancy\":2,\"uuids\":[{\"uuid\":\"user1\"," +
+                        "\"state\":{\"age\":10}},{\"uuid\":\"user3\",\"state\":{\"age\":30}}]}}}," +
+                        "\"service\":\"Presence\"}")));
 
         PNHereNowResult response = partialHereNow.channels(Arrays.asList("ch1", "ch2")).includeState(true).sync();
 
@@ -81,7 +86,11 @@ public class HereNowEndpointTest extends TestHarness {
     public void testMultipleChannelSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/ch1,ch2"))
-                .willReturn(aResponse().withBody("{\"status\":200,\"message\":\"OK\",\"payload\":{\"total_occupancy\":3,\"total_channels\":2,\"channels\":{\"ch1\":{\"occupancy\":1,\"uuids\":[{\"uuid\":\"user1\"}]},\"ch2\":{\"occupancy\":2,\"uuids\":[{\"uuid\":\"user1\"},{\"uuid\":\"user3\"}]}}},\"service\":\"Presence\"}")));
+                .willReturn(aResponse().withBody("{\"status\":200,\"message\":\"OK\"," +
+                        "\"payload\":{\"total_occupancy\":3,\"total_channels\":2," +
+                        "\"channels\":{\"ch1\":{\"occupancy\":1,\"uuids\":[{\"uuid\":\"user1\"}]}," +
+                        "\"ch2\":{\"occupancy\":2,\"uuids\":[{\"uuid\":\"user1\"},{\"uuid\":\"user3\"}]}}}," +
+                        "\"service\":\"Presence\"}")));
 
         PNHereNowResult response = partialHereNow.channels(Arrays.asList("ch1", "ch2")).includeState(true).sync();
 
@@ -111,7 +120,9 @@ public class HereNowEndpointTest extends TestHarness {
     public void testMultipleChannelWithoutStateSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/game1,game2"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": {\"game1\": {\"uuids\": [\"a3ffd012-a3b9-478c-8705-64089f24d71e\"], \"occupancy\": 1}}, \"total_channels\": 1, \"total_occupancy\": 1}, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": " +
+                        "{\"game1\": {\"uuids\": [\"a3ffd012-a3b9-478c-8705-64089f24d71e\"], \"occupancy\": 1}}, " +
+                        "\"total_channels\": 1, \"total_occupancy\": 1}, \"service\": \"Presence\"}")));
 
         PNHereNowResult response = partialHereNow.channels(Arrays.asList("game1", "game2")).includeState(false).sync();
 
@@ -121,7 +132,8 @@ public class HereNowEndpointTest extends TestHarness {
         assertEquals(response.getChannels().get("game1").getChannelName(), "game1");
         assertEquals(response.getChannels().get("game1").getOccupancy(), 1);
         assertEquals(response.getChannels().get("game1").getOccupants().size(), 1);
-        assertEquals(response.getChannels().get("game1").getOccupants().get(0).getUuid(), "a3ffd012-a3b9-478c-8705-64089f24d71e");
+        assertEquals(response.getChannels().get("game1").getOccupants().get(0).getUuid(), "a3ffd012-a3b9-478c-8705" +
+                "-64089f24d71e");
         assertEquals(response.getChannels().get("game1").getOccupants().get(0).getState(), null);
 
     }
@@ -130,9 +142,12 @@ public class HereNowEndpointTest extends TestHarness {
     public void testMultipleChannelWithoutStateUUIDsSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/game1,game2"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": {\"game1\": {\"occupancy\": 1}}, \"total_channels\": 1, \"total_occupancy\": 1}, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": " +
+                        "{\"game1\": {\"occupancy\": 1}}, \"total_channels\": 1, \"total_occupancy\": 1}, " +
+                        "\"service\": \"Presence\"}")));
 
-        PNHereNowResult response = partialHereNow.channels(Arrays.asList("game1", "game2")).includeState(false).includeUUIDs(false).sync();
+        PNHereNowResult response =
+                partialHereNow.channels(Arrays.asList("game1", "game2")).includeState(false).includeUUIDs(false).sync();
 
         assertEquals(response.getTotalChannels(), 1);
         assertEquals(response.getTotalOccupancy(), 1);
@@ -150,9 +165,11 @@ public class HereNowEndpointTest extends TestHarness {
     public void testSingularChannelWithoutStateUUIDsSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/game1"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"occupancy\": 3}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", " +
+                        "\"occupancy\": 3}")));
 
-        PNHereNowResult response = partialHereNow.channels(Arrays.asList("game1")).includeState(false).includeUUIDs(false).sync();
+        PNHereNowResult response =
+                partialHereNow.channels(Arrays.asList("game1")).includeState(false).includeUUIDs(false).sync();
 
         assertEquals(response.getTotalChannels(), 1);
         assertEquals(response.getTotalOccupancy(), 3);
@@ -167,7 +184,8 @@ public class HereNowEndpointTest extends TestHarness {
     public void testSingularChannelWithoutStateSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/game1"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"uuids\": [\"a3ffd012-a3b9-478c-8705-64089f24d71e\"], \"occupancy\": 1}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", " +
+                        "\"uuids\": [\"a3ffd012-a3b9-478c-8705-64089f24d71e\"], \"occupancy\": 1}")));
 
         PNHereNowResult response = partialHereNow.channels(Arrays.asList("game1")).includeState(false).sync();
 
@@ -176,7 +194,8 @@ public class HereNowEndpointTest extends TestHarness {
         assertEquals(response.getChannels().size(), 1);
         assertEquals(response.getChannels().get("game1").getOccupancy(), 1);
         assertEquals(response.getChannels().get("game1").getOccupants().size(), 1);
-        assertEquals(response.getChannels().get("game1").getOccupants().get(0).getUuid(), "a3ffd012-a3b9-478c-8705-64089f24d71e");
+        assertEquals(response.getChannels().get("game1").getOccupants().get(0).getUuid(), "a3ffd012-a3b9-478c-8705" +
+                "-64089f24d71e");
         assertEquals(response.getChannels().get("game1").getOccupants().get(0).getState(), null);
 
     }
@@ -185,7 +204,9 @@ public class HereNowEndpointTest extends TestHarness {
     public void testSingularChannelSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/game1"))
-                .willReturn(aResponse().withBody("{\"status\":200,\"message\":\"OK\",\"service\":\"Presence\",\"uuids\":[{\"uuid\":\"a3ffd012-a3b9-478c-8705-64089f24d71e\",\"state\":{\"age\":10}}],\"occupancy\":1}")));
+                .willReturn(aResponse().withBody("{\"status\":200,\"message\":\"OK\",\"service\":\"Presence\"," +
+                        "\"uuids\":[{\"uuid\":\"a3ffd012-a3b9-478c-8705-64089f24d71e\",\"state\":{\"age\":10}}]," +
+                        "\"occupancy\":1}")));
 
         PNHereNowResult response = partialHereNow.channels(Arrays.asList("game1")).includeState(true).sync();
 
@@ -194,7 +215,8 @@ public class HereNowEndpointTest extends TestHarness {
         assertEquals(response.getChannels().size(), 1);
         assertEquals(response.getChannels().get("game1").getOccupancy(), 1);
         assertEquals(response.getChannels().get("game1").getOccupants().size(), 1);
-        assertEquals(response.getChannels().get("game1").getOccupants().get(0).getUuid(), "a3ffd012-a3b9-478c-8705-64089f24d71e");
+        assertEquals(response.getChannels().get("game1").getOccupants().get(0).getUuid(), "a3ffd012-a3b9-478c-8705" +
+                "-64089f24d71e");
         assertEquals(response.getChannels().get("game1").getOccupants().get(0).getState().toString(), "{\"age\":10}");
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
@@ -206,9 +228,11 @@ public class HereNowEndpointTest extends TestHarness {
     public void testSingularChannelAndGroupSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/game1"))
-                .willReturn(aResponse().withBody("{\"status\":200,\"message\":\"OK\",\"payload\":{\"channels\":{}, \"total_channels\":0, \"total_occupancy\":0},\"service\":\"Presence\"}")));
+                .willReturn(aResponse().withBody("{\"status\":200,\"message\":\"OK\",\"payload\":{\"channels\":{}, " +
+                        "\"total_channels\":0, \"total_occupancy\":0},\"service\":\"Presence\"}")));
 
-        PNHereNowResult response = partialHereNow.channelGroups(Arrays.asList("grp1")).channels(Arrays.asList("game1")).includeState(true).sync();
+        PNHereNowResult response =
+                partialHereNow.channelGroups(Arrays.asList("grp1")).channels(Arrays.asList("game1")).includeState(true).sync();
 
         assertEquals(response.getTotalOccupancy(), 0);
     }
@@ -218,7 +242,12 @@ public class HereNowEndpointTest extends TestHarness {
     public void testIsAuthRequiredSuccessSync() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/ch1,ch2"))
-                .willReturn(aResponse().withBody("{\"status\":200,\"message\":\"OK\",\"payload\":{\"total_occupancy\":3,\"total_channels\":2,\"channels\":{\"ch1\":{\"occupancy\":1,\"uuids\":[{\"uuid\":\"user1\",\"state\":{\"age\":10}}]},\"ch2\":{\"occupancy\":2,\"uuids\":[{\"uuid\":\"user1\",\"state\":{\"age\":10}},{\"uuid\":\"user3\",\"state\":{\"age\":30}}]}}},\"service\":\"Presence\"}")));
+                .willReturn(aResponse().withBody("{\"status\":200,\"message\":\"OK\"," +
+                        "\"payload\":{\"total_occupancy\":3,\"total_channels\":2," +
+                        "\"channels\":{\"ch1\":{\"occupancy\":1,\"uuids\":[{\"uuid\":\"user1\"," +
+                        "\"state\":{\"age\":10}}]},\"ch2\":{\"occupancy\":2,\"uuids\":[{\"uuid\":\"user1\"," +
+                        "\"state\":{\"age\":10}},{\"uuid\":\"user3\",\"state\":{\"age\":30}}]}}}," +
+                        "\"service\":\"Presence\"}")));
 
         pubnub.getConfiguration().setAuthKey("myKey");
         partialHereNow.channels(Arrays.asList("ch1", "ch2")).includeState(true).sync();
@@ -231,7 +260,12 @@ public class HereNowEndpointTest extends TestHarness {
     @Test
     public void testOperationTypeSuccessAsync() throws IOException, PubNubException, InterruptedException {
         stubFor(get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/ch1,ch2"))
-                .willReturn(aResponse().withBody("{\"status\":200,\"message\":\"OK\",\"payload\":{\"total_occupancy\":3,\"total_channels\":2,\"channels\":{\"ch1\":{\"occupancy\":1,\"uuids\":[{\"uuid\":\"user1\",\"state\":{\"age\":10}}]},\"ch2\":{\"occupancy\":2,\"uuids\":[{\"uuid\":\"user1\",\"state\":{\"age\":10}},{\"uuid\":\"user3\",\"state\":{\"age\":30}}]}}},\"service\":\"Presence\"}")));
+                .willReturn(aResponse().withBody("{\"status\":200,\"message\":\"OK\"," +
+                        "\"payload\":{\"total_occupancy\":3,\"total_channels\":2," +
+                        "\"channels\":{\"ch1\":{\"occupancy\":1,\"uuids\":[{\"uuid\":\"user1\"," +
+                        "\"state\":{\"age\":10}}]},\"ch2\":{\"occupancy\":2,\"uuids\":[{\"uuid\":\"user1\"," +
+                        "\"state\":{\"age\":10}},{\"uuid\":\"user3\",\"state\":{\"age\":30}}]}}}," +
+                        "\"service\":\"Presence\"}")));
 
         final AtomicInteger atomic = new AtomicInteger(0);
 
@@ -252,7 +286,12 @@ public class HereNowEndpointTest extends TestHarness {
     public void testNullSubKeySync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/ch1,ch2"))
-                .willReturn(aResponse().withBody("{\"status\":200,\"message\":\"OK\",\"payload\":{\"total_occupancy\":3,\"total_channels\":2,\"channels\":{\"ch1\":{\"occupancy\":1,\"uuids\":[{\"uuid\":\"user1\",\"state\":{\"age\":10}}]},\"ch2\":{\"occupancy\":2,\"uuids\":[{\"uuid\":\"user1\",\"state\":{\"age\":10}},{\"uuid\":\"user3\",\"state\":{\"age\":30}}]}}},\"service\":\"Presence\"}")));
+                .willReturn(aResponse().withBody("{\"status\":200,\"message\":\"OK\"," +
+                        "\"payload\":{\"total_occupancy\":3,\"total_channels\":2," +
+                        "\"channels\":{\"ch1\":{\"occupancy\":1,\"uuids\":[{\"uuid\":\"user1\"," +
+                        "\"state\":{\"age\":10}}]},\"ch2\":{\"occupancy\":2,\"uuids\":[{\"uuid\":\"user1\"," +
+                        "\"state\":{\"age\":10}},{\"uuid\":\"user3\",\"state\":{\"age\":30}}]}}}," +
+                        "\"service\":\"Presence\"}")));
 
         pubnub.getConfiguration().setSubscribeKey(null);
         partialHereNow.channels(Arrays.asList("ch1", "ch2")).includeState(true).sync();
@@ -262,7 +301,12 @@ public class HereNowEndpointTest extends TestHarness {
     public void testEmptySubKeySync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/ch1,ch2"))
-                .willReturn(aResponse().withBody("{\"status\":200,\"message\":\"OK\",\"payload\":{\"total_occupancy\":3,\"total_channels\":2,\"channels\":{\"ch1\":{\"occupancy\":1,\"uuids\":[{\"uuid\":\"user1\",\"state\":{\"age\":10}}]},\"ch2\":{\"occupancy\":2,\"uuids\":[{\"uuid\":\"user1\",\"state\":{\"age\":10}},{\"uuid\":\"user3\",\"state\":{\"age\":30}}]}}},\"service\":\"Presence\"}")));
+                .willReturn(aResponse().withBody("{\"status\":200,\"message\":\"OK\"," +
+                        "\"payload\":{\"total_occupancy\":3,\"total_channels\":2," +
+                        "\"channels\":{\"ch1\":{\"occupancy\":1,\"uuids\":[{\"uuid\":\"user1\"," +
+                        "\"state\":{\"age\":10}}]},\"ch2\":{\"occupancy\":2,\"uuids\":[{\"uuid\":\"user1\"," +
+                        "\"state\":{\"age\":10}},{\"uuid\":\"user3\",\"state\":{\"age\":30}}]}}}," +
+                        "\"service\":\"Presence\"}")));
 
         pubnub.getConfiguration().setSubscribeKey("");
         partialHereNow.channels(Arrays.asList("ch1", "ch2")).includeState(true).sync();

@@ -50,7 +50,8 @@ public class AllChannelsChannelGroupEndpointTest extends TestHarness {
     @Test
     public void testSyncSuccess() throws IOException, PubNubException, InterruptedException {
         stubFor(get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"ChannelGroups\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": " +
+                        "[\"a\",\"b\"]}, \"service\": \"ChannelGroups\"}")));
 
         PNChannelGroupsAllChannelsResult response = partialAllChannelsChannelGroup.channelGroup("groupA").sync();
         assertThat(response.getChannels(), org.hamcrest.Matchers.contains("a", "b"));
@@ -59,7 +60,8 @@ public class AllChannelsChannelGroupEndpointTest extends TestHarness {
     @Test(expected = PubNubException.class)
     public void testSyncMissingGroup() throws IOException, PubNubException, InterruptedException {
         stubFor(get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"ChannelGroups\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": " +
+                        "[\"a\",\"b\"]}, \"service\": \"ChannelGroups\"}")));
 
         partialAllChannelsChannelGroup.sync();
     }
@@ -67,7 +69,8 @@ public class AllChannelsChannelGroupEndpointTest extends TestHarness {
     @Test(expected = PubNubException.class)
     public void testSyncEmptyGroup() throws IOException, PubNubException, InterruptedException {
         stubFor(get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"ChannelGroups\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": " +
+                        "[\"a\",\"b\"]}, \"service\": \"ChannelGroups\"}")));
 
         partialAllChannelsChannelGroup.channelGroup("").sync();
     }
@@ -75,7 +78,8 @@ public class AllChannelsChannelGroupEndpointTest extends TestHarness {
     @Test(expected = PubNubException.class)
     public void testNullPayload() throws IOException, PubNubException, InterruptedException {
         stubFor(get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"ChannelGroups\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": " +
+                        "\"ChannelGroups\"}")));
 
         PNChannelGroupsAllChannelsResult response = partialAllChannelsChannelGroup.channelGroup("groupA").sync();
         assertThat(response.getChannels(), org.hamcrest.Matchers.contains("a", "b"));
@@ -84,7 +88,8 @@ public class AllChannelsChannelGroupEndpointTest extends TestHarness {
     @Test
     public void testIsAuthRequiredSuccessSync() throws IOException, PubNubException, InterruptedException {
         stubFor(get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"ChannelGroups\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": " +
+                        "[\"a\",\"b\"]}, \"service\": \"ChannelGroups\"}")));
 
         pubnub.getConfiguration().setAuthKey("myKey");
         partialAllChannelsChannelGroup.channelGroup("groupA").sync();
@@ -97,7 +102,8 @@ public class AllChannelsChannelGroupEndpointTest extends TestHarness {
     @Test
     public void testOperationTypeSuccessAsync() throws IOException, PubNubException, InterruptedException {
         stubFor(get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"ChannelGroups\"}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": " +
+                        "[\"a\",\"b\"]}, \"service\": \"ChannelGroups\"}")));
 
         final AtomicInteger atomic = new AtomicInteger(0);
 

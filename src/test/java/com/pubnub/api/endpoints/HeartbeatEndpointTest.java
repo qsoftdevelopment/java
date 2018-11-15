@@ -131,7 +131,8 @@ public class HeartbeatEndpointTest extends TestHarness {
         LoggedRequest request = requests.get(0);
         assertEquals("myUUID", request.queryParameter("uuid").firstValue());
         assertEquals("123", request.queryParameter("heartbeat").firstValue());
-        assertEquals("%7B%22CH2%22%3A%22this-is-channel2%22%2C%22CH1%22%3A%22this-is-channel1%22%7D", request.queryParameter("state").firstValue());
+        assertEquals("%7B%22CH2%22%3A%22this-is-channel2%22%2C%22CH1%22%3A%22this-is-channel1%22%7D",
+                request.queryParameter("state").firstValue());
 
     }
 

@@ -213,7 +213,8 @@ public class PublishTest extends TestHarness {
 
     @Test
     public void testSuccessArraySync() throws PubNubException, InterruptedException {
-        stubFor(get(urlEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%5B%22a%22%2C%22b%22%2C%22c%22%5D?pnsdk=PubNub-Java-Unified/suchJava&requestid=PubNubRequestId&seqn=1&uuid=myUUID"))
+        stubFor(get(urlEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%5B%22a%22%2C%22b%22%2C%22c%22" +
+                "%5D?pnsdk=PubNub-Java-Unified/suchJava&requestid=PubNubRequestId&seqn=1&uuid=myUUID"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
         instance.channel("coolChannel").message(Arrays.asList("a", "b", "c")).sync();
@@ -225,7 +226,8 @@ public class PublishTest extends TestHarness {
 
     @Test
     public void testSuccessArrayEncryptedSync() throws PubNubException, InterruptedException {
-        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22HFP7V6bDwBLrwc1t8Rnrog%3D%3D%22"))
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22HFP7V6bDwBLrwc1t8Rnrog%3D" +
+                "%3D%22"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
         pubnub.getConfiguration().setCipherKey("testCipher");
@@ -257,7 +259,8 @@ public class PublishTest extends TestHarness {
         params.put("a", 10);
         params.put("z", "test");
 
-        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%7B%22a%22%3A10%2C%22z%22%3A%22test%22%7D"))
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%7B%22a%22%3A10%2C%22z%22%3A" +
+                "%22test%22%7D"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
         instance.channel("coolChannel").message(params).sync();
@@ -272,7 +275,8 @@ public class PublishTest extends TestHarness {
     public void testSuccessPOJOSync() throws PubNubException, InterruptedException {
         TestPojo testPojo = new TestPojo("10", "20");
 
-        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%7B%22field1%22%3A%2210%22%2C%22field2%22%3A%2220%22%7D"))
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%7B%22field1%22%3A%2210%22" +
+                "%2C%22field2%22%3A%2220%22%7D"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
         instance.channel("coolChannel").message(testPojo).sync();

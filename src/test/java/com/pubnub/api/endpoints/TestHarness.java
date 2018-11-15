@@ -5,7 +5,7 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.enums.PNLogVerbosity;
 
 public class TestHarness {
-    protected final int PORT = 8080;
+    protected final static int PORT = 8080;
 
     protected PubNub createPubNubInstance() {
         PNConfiguration pnConfiguration = new PNConfiguration();

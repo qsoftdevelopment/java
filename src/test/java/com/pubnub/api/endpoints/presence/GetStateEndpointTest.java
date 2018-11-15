@@ -54,10 +54,12 @@ public class GetStateEndpointTest extends TestHarness {
     public void testOneChannelSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/sampleUUID"))
-                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\"}, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : " +
+                        "20, \"status\" : \"online\"}, \"service\": \"Presence\"}")));
 
 
-        PNGetStateResult result = partialGetState.channels(Collections.singletonList("testChannel")).uuid("sampleUUID").sync();
+        PNGetStateResult result = partialGetState.channels(Collections.singletonList("testChannel")).uuid("sampleUUID"
+        ).sync();
         JsonElement ch1Data = result.getStateByUUID().get("testChannel");
         assertEquals(pubnub.getMapper().elementToInt(ch1Data, "age"), 20);
         assertEquals(pubnub.getMapper().elementToString(ch1Data, "status"), "online");
@@ -67,7 +69,8 @@ public class GetStateEndpointTest extends TestHarness {
     public void testOneChannelWithoutUUIDSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/myUUID"))
-                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\"}, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : " +
+                        "20, \"status\" : \"online\"}, \"service\": \"Presence\"}")));
 
 
         PNGetStateResult result = partialGetState.channels(Collections.singletonList("testChannel")).sync();
@@ -81,7 +84,8 @@ public class GetStateEndpointTest extends TestHarness {
     public void testFailedPayloadSync() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/sampleUUID"))
-                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": \"age\" : 20, \"status\" : \"online\"}, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": \"age\" : 20, " +
+                        "\"status\" : \"online\"}, \"service\": \"Presence\"}")));
 
         partialGetState.channels(Collections.singletonList("testChannel")).uuid("sampleUUID").sync();
     }
@@ -90,7 +94,9 @@ public class GetStateEndpointTest extends TestHarness {
     public void testMultipleChannelSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1,ch2/uuid/sampleUUID"))
-                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"ch1\": { \"age\" : 20, \"status\" : \"online\"}, \"ch2\": { \"age\": 100, \"status\": \"offline\" } }, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"ch1\": { " +
+                        "\"age\" : 20, \"status\" : \"online\"}, \"ch2\": { \"age\": 100, \"status\": \"offline\" } " +
+                        "}, \"service\": \"Presence\"}")));
 
         PNGetStateResult result = partialGetState.channels(Arrays.asList("ch1", "ch2")).uuid("sampleUUID").sync();
         JsonElement ch1Data = result.getStateByUUID().get("ch1");
@@ -105,9 +111,12 @@ public class GetStateEndpointTest extends TestHarness {
     public void testOneChannelGroupSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/,/uuid/sampleUUID"))
-                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"chcg1\": { \"age\" : 20, \"status\" : \"online\"}, \"chcg2\": { \"age\": 100, \"status\": \"offline\" } }, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"chcg1\": {" +
+                        " \"age\" : 20, \"status\" : \"online\"}, \"chcg2\": { \"age\": 100, \"status\": \"offline\" " +
+                        "} }, \"service\": \"Presence\"}")));
 
-        PNGetStateResult result = partialGetState.channelGroups(Collections.singletonList("cg1")).uuid("sampleUUID").sync();
+        PNGetStateResult result =
+                partialGetState.channelGroups(Collections.singletonList("cg1")).uuid("sampleUUID").sync();
         JsonElement ch1Data = result.getStateByUUID().get("chcg1");
         assertEquals(pubnub.getMapper().elementToInt(ch1Data, "age"), 20);
         assertEquals(pubnub.getMapper().elementToString(ch1Data, "status"), "online");
@@ -124,7 +133,9 @@ public class GetStateEndpointTest extends TestHarness {
     public void testManyChannelGroupSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/,/uuid/sampleUUID"))
-                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"chcg1\": { \"age\" : 20, \"status\" : \"online\"}, \"chcg2\": { \"age\": 100, \"status\": \"offline\" } }, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"chcg1\": {" +
+                        " \"age\" : 20, \"status\" : \"online\"}, \"chcg2\": { \"age\": 100, \"status\": \"offline\" " +
+                        "} }, \"service\": \"Presence\"}")));
 
         PNGetStateResult result = partialGetState.channelGroups(Arrays.asList("cg1", "cg2")).uuid("sampleUUID").sync();
         JsonElement ch1Data = result.getStateByUUID().get("chcg1");
@@ -143,9 +154,12 @@ public class GetStateEndpointTest extends TestHarness {
     public void testCombinationSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/uuid/sampleUUID"))
-                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"chcg1\": { \"age\" : 20, \"status\" : \"online\"}, \"chcg2\": { \"age\": 100, \"status\": \"offline\" } }, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"chcg1\": {" +
+                        " \"age\" : 20, \"status\" : \"online\"}, \"chcg2\": { \"age\": 100, \"status\": \"offline\" " +
+                        "} }, \"service\": \"Presence\"}")));
 
-        PNGetStateResult result = partialGetState.channels(Collections.singletonList("ch1")).channelGroups(Arrays.asList("cg1", "cg2")).uuid("sampleUUID").sync();
+        PNGetStateResult result =
+                partialGetState.channels(Collections.singletonList("ch1")).channelGroups(Arrays.asList("cg1", "cg2")).uuid("sampleUUID").sync();
         JsonElement ch1Data = result.getStateByUUID().get("chcg1");
         assertEquals(pubnub.getMapper().elementToInt(ch1Data, "age"), 20);
         assertEquals(pubnub.getMapper().elementToString(ch1Data, "status"), "online");
@@ -163,7 +177,8 @@ public class GetStateEndpointTest extends TestHarness {
     public void testMissingChannelAndGroupSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/sampleUUID"))
-                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\"}, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : " +
+                        "20, \"status\" : \"online\"}, \"service\": \"Presence\"}")));
         partialGetState.uuid("sampleUUID").sync();
     }
 
@@ -171,7 +186,8 @@ public class GetStateEndpointTest extends TestHarness {
     public void testIsAuthRequiredSuccessSync() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/sampleUUID"))
-                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\"}, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : " +
+                        "20, \"status\" : \"online\"}, \"service\": \"Presence\"}")));
 
         pubnub.getConfiguration().setAuthKey("myKey");
         partialGetState.channels(Collections.singletonList("testChannel")).uuid("sampleUUID").sync();
@@ -185,7 +201,8 @@ public class GetStateEndpointTest extends TestHarness {
     public void testOperationTypeSuccessAsync() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/sampleUUID"))
-                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\"}, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : " +
+                        "20, \"status\" : \"online\"}, \"service\": \"Presence\"}")));
 
         final AtomicInteger atomic = new AtomicInteger(0);
 
@@ -205,7 +222,8 @@ public class GetStateEndpointTest extends TestHarness {
     public void testNullSubKeySync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/sampleUUID"))
-                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\"}, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : " +
+                        "20, \"status\" : \"online\"}, \"service\": \"Presence\"}")));
 
         pubnub.getConfiguration().setSubscribeKey(null);
         partialGetState.channels(Collections.singletonList("testChannel")).uuid("sampleUUID").sync();
@@ -215,7 +233,8 @@ public class GetStateEndpointTest extends TestHarness {
     public void testEmptySubKeySync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/sampleUUID"))
-                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\"}, \"service\": \"Presence\"}")));
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : " +
+                        "20, \"status\" : \"online\"}, \"service\": \"Presence\"}")));
 
         pubnub.getConfiguration().setSubscribeKey("");
         partialGetState.channels(Collections.singletonList("testChannel")).uuid("sampleUUID").sync();

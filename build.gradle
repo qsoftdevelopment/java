@@ -42,14 +42,14 @@ dependencies {
 
     // gson
     compile group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
-    compile group: 'com.squareup.retrofit2', name: 'converter-gson', version:'2.4.0'
+    compile group: 'com.squareup.retrofit2', name: 'converter-gson', version: '2.4.0'
 
-    testCompile group: 'ch.qos.logback', name: 'logback-classic', version:'1.2.3'
-    testCompile group: 'ch.qos.logback', name: 'logback-core', version:'1.2.3'
-    testCompile group: 'org.hamcrest', name: 'hamcrest-all', version:'1.3'
-    testCompile group: 'junit', name: 'junit', version:'4.12'
-    testCompile group: 'com.github.tomakehurst', name: 'wiremock', version:'2.19.0'
-    testCompile group: 'org.awaitility', name: 'awaitility', version:'3.1.2'
+    testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    testCompile group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'
+    testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'com.github.tomakehurst', name: 'wiremock', version: '2.19.0'
+    testCompile group: 'org.awaitility', name: 'awaitility', version: '3.1.2'
     testCompile group: 'org.json', name: 'json', version: '20180813'
 }
 
@@ -65,16 +65,16 @@ jacocoTestReport {
 }
 
 checkstyle {
-    toolVersion = '8.14'
-    configFile = rootProject.file('src/config/checkstyle/checkstyle.xml')
-    //configFile = new File(rootDir, "src/config/checkstyle/checkstyle.xml")
+    toolVersion = "8.14"
+    configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+    //configFile = new File(rootDir, "config/checkstyle/checkstyle.xml")
 }
 
 tasks.withType(Checkstyle) {
     exclude '**/vendor/**', '**/*Test*'
 
     reports {
-        xml.enabled =  true
+        xml.enabled = true
         html.enabled = true
     }
 }
