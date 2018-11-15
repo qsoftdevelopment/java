@@ -519,8 +519,8 @@ public class SubscriptionManagerTest extends TestHarness {
 
     @Test
     public void testNamingSubscribeChannelGroupBuilder() {
-        final AtomicInteger gotStatus = new AtomicInteger();
-        final AtomicBoolean gotMessage = new AtomicBoolean();
+        final AtomicBoolean gotStatus = new AtomicBoolean(false);
+        final AtomicBoolean gotMessage = new AtomicBoolean(false);
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\"," +
                         "\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1}," +
@@ -533,7 +533,7 @@ public class SubscriptionManagerTest extends TestHarness {
 
                 if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
                     assertEquals(2, status.getAffectedChannels().size());
-                    gotStatus.addAndGet(1);
+                    gotStatus.set(true);
                 }
 
             }
@@ -553,11 +553,10 @@ public class SubscriptionManagerTest extends TestHarness {
             }
         });
 
-
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
 
-        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(gotMessage, org.hamcrest.core.IsEqual.equalTo(true));
-        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(gotStatus, org.hamcrest.core.IsEqual.equalTo(1));
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilTrue(gotMessage);
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilTrue(gotStatus);
 
     }
 
@@ -1750,7 +1749,7 @@ public class SubscriptionManagerTest extends TestHarness {
         pubnub.addListener(sub1);
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
 
-        Awaitility.await().atMost(4, TimeUnit.SECONDS).untilTrue(statusRecieved);
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilFalse(statusRecieved);
     }
 
     @Test
