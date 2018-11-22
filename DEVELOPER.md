@@ -14,7 +14,13 @@
   `gradle clean compile`
   
 ### Building a shadowJar (Fat Jar)
-  `gradle clean build shadowJar`
+  * `gradle clean build shadowJar`
+  ##### or
+  * `gradle clean`
+  * then
+  * `gradle clean test`
+  * then
+  * `gradle build shadowJar`
   
 ### deploying to nexus
   * enable the javadoc documentation

@@ -207,7 +207,7 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
-                assertTrue(requests.size() >= 1);
+                assertTrue(requests.size() > 0);
                 assertEquals("Message", pubnub.getMapper().elementToString(message.getMessage(), "text"));
                 assertEquals("coolChannel", message.getChannel());
                 assertEquals(null, message.getSubscription());
@@ -530,18 +530,16 @@ public class SubscriptionManagerTest extends TestHarness {
         pubnub.addListener(new SubscribeCallback() {
             @Override
             public void status(PubNub pubnub, PNStatus status) {
-
                 if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
                     assertEquals(2, status.getAffectedChannels().size());
                     gotStatus.set(true);
                 }
-
             }
 
             @Override
             public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
-                assertTrue(requests.size() >= 1);
+                assertTrue(requests.size() > 0);
                 assertEquals("Message", pubnub.getMapper().elementToString(message.getMessage(), "text"));
                 assertEquals("coolChannel", message.getChannel());
                 assertEquals("coolChannelGroup", message.getSubscription());
@@ -1732,7 +1730,7 @@ public class SubscriptionManagerTest extends TestHarness {
         SubscribeCallback sub1 = new SubscribeCallback() {
             @Override
             public void status(PubNub pubnub, PNStatus status) {
-                if (status.getOperation() == PNOperationType.PNHeartbeatOperation) {
+                if (status.getOperation() != PNOperationType.PNHeartbeatOperation) {
                     statusRecieved.set(true);
                 }
             }
@@ -1749,7 +1747,7 @@ public class SubscriptionManagerTest extends TestHarness {
         pubnub.addListener(sub1);
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
 
-        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilFalse(statusRecieved);
+        Awaitility.await().atMost(4, TimeUnit.SECONDS).untilTrue(statusRecieved);
     }
 
     @Test
