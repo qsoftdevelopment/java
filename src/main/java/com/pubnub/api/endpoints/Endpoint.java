@@ -191,7 +191,8 @@ public abstract class Endpoint<Input, Output> {
                     }
 
                     callback.onResponse(null,
-                            createStatusResponse(pnStatusCategory, response, ex, affectedChannels, affectedChannelGroups));
+                            createStatusResponse(pnStatusCategory, response, ex, affectedChannels,
+                                    affectedChannelGroups));
                     return;
                 }
                 storeRequestLatency(response, getOperationType());
