@@ -7,6 +7,7 @@ import okhttp3.*;
 import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Okio;
+import okio.Timeout;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -101,6 +102,11 @@ public class AppEngineFactory implements Call {
     @Override
     public boolean isCanceled() {
         return false;
+    }
+
+    @Override
+    public Timeout timeout() {
+        return Timeout.NONE;
     }
 
     @Override
