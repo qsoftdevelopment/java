@@ -68,7 +68,7 @@ public class EndpointTest extends TestHarness {
             @Override
             protected Call doWork(Map baseParams) throws PubNubException {
 
-                Call<Object> fakeCall = new Call<Object>() {
+                Call fakeCall = new Call<Object>() {
 
                     @Override
                     public Response<Object> execute() throws IOException {
@@ -103,7 +103,7 @@ public class EndpointTest extends TestHarness {
 
                     @Override
                     public Request request() {
-                        return null;
+                        return new Request.Builder().build();
                     }
                 };
 

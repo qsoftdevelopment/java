@@ -553,8 +553,8 @@ public class SubscriptionManagerTest extends TestHarness {
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
 
-        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilTrue(gotMessage);
-        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilTrue(gotStatus);
+        Awaitility.await().atMost(4, TimeUnit.SECONDS).untilTrue(gotMessage);
+        Awaitility.await().atMost(4, TimeUnit.SECONDS).untilTrue(gotStatus);
 
     }
 
