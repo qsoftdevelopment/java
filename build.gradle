@@ -10,6 +10,7 @@ plugins {
     id 'findbugs'
 }
 group = 'com.pubnub'
+
 version = '4.22.0-beta'
 
 description = """"""
