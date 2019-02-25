@@ -10,16 +10,15 @@ import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.history.PNMessageCountResult;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import retrofit2.Call;
+import retrofit2.Response;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import lombok.Setter;
-import lombok.experimental.Accessors;
-import retrofit2.Call;
-import retrofit2.Response;
 
 @Accessors(chain = true, fluent = true)
 public class MessageCounts extends Endpoint<JsonElement, PNMessageCountResult> {
@@ -96,12 +95,20 @@ public class MessageCounts extends Endpoint<JsonElement, PNMessageCountResult> {
 
         if (input.body() != null) {
 
-            for (Iterator<Map.Entry<String, JsonElement>> it = mapper.getObjectIterator(input.body(), "channels"); it.hasNext();
-            ) {
-                Map.Entry<String, JsonElement> entry = it.next();
-                channelsMap.put(entry.getKey(), entry.getValue().getAsLong());
+            if (mapper.hasField(input.body(), "channels")) {
+                for (Iterator<Map.Entry<String, JsonElement>> it = mapper.getObjectIterator(input.body(), "channels")
+                     ; it.hasNext(); ) {
+                    Map.Entry<String, JsonElement> entry = it.next();
+                    channelsMap.put(entry.getKey(), entry.getValue().getAsLong());
+                }
+                messageCountsData.channels(channelsMap);
+            } else {
+                throw PubNubException.builder()
+                        .pubnubError(PubNubErrorBuilder.PNERROBJ_HTTP_ERROR)
+                        .errormsg("History is disabled")
+                        .jso(input.body())
+                        .build();
             }
-            messageCountsData.channels(channelsMap);
         }
 
         return messageCountsData.build();
