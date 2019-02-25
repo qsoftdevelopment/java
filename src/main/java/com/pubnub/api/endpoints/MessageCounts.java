@@ -95,7 +95,7 @@ public class MessageCounts extends Endpoint<JsonElement, PNMessageCountResult> {
 
         if (input.body() != null) {
 
-            if (mapper.hasField(input.body(), "channels")) {
+            if (mapper.isJsonObject(input.body()) && mapper.hasField(input.body(), "channels")) {
                 for (Iterator<Map.Entry<String, JsonElement>> it = mapper.getObjectIterator(input.body(), "channels")
                      ; it.hasNext(); ) {
                     Map.Entry<String, JsonElement> entry = it.next();
