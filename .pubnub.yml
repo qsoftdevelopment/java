@@ -367,6 +367,7 @@ features:
     - STORAGE-COUNT
     - STORAGE-FETCH-MESSAGES
     - STORAGE-DELETE-MESSAGES
+    - STORAGE-MESSAGE-COUNT
   time:
     - TIME-TIME
   subscribe:
