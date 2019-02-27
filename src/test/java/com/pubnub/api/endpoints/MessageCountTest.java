@@ -4,16 +4,21 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.models.consumer.history.PNMessageCountResult;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 
 public class MessageCountTest extends TestHarness {
@@ -56,7 +61,7 @@ public class MessageCountTest extends TestHarness {
     }
 
     @Test
-    public void testSingleChannel_withSingleTimestamp() throws PubNubException {
+    public void testSingleChannelwithSingleTimestamp() throws PubNubException {
         stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", " +
                         "\"channels\": {\"my_channel\":19}}")));
@@ -65,9 +70,9 @@ public class MessageCountTest extends TestHarness {
                 messageCounts.channels(Arrays.asList("my_channel"))
                         .timetoken((long) 10000).sync();
 
-        Assert.assertEquals(response.getChannels().size(), 1);
-        Assert.assertFalse(response.getChannels().containsKey("channel_dont_exist"));
-        Assert.assertTrue(response.getChannels().containsKey("my_channel"));
+        assertEquals(response.getChannels().size(), 1);
+        assertFalse(response.getChannels().containsKey("channel_dont_exist"));
+        assertTrue(response.getChannels().containsKey("my_channel"));
         for (Map.Entry<String, Long> stringLongEntry : response.getChannels().entrySet()) {
             assertEquals("my_channel", stringLongEntry.getKey());
             assertEquals(Long.valueOf("19"), stringLongEntry.getValue());
@@ -75,7 +80,7 @@ public class MessageCountTest extends TestHarness {
     }
 
     @Test
-    public void testSingleChannel_withMultiTimestamp() throws PubNubException {
+    public void testSingleChannelwithMultiTimestamp() throws PubNubException {
         stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", " +
                         "\"channels\": {\"my_channel\":19}}")));
@@ -84,9 +89,9 @@ public class MessageCountTest extends TestHarness {
                 messageCounts.channels(Arrays.asList("my_channel"))
                         .channelsTimetoken(Arrays.asList((long) 10000, (long) 20000)).sync();
 
-        Assert.assertEquals(response.getChannels().size(), 1);
-        Assert.assertFalse(response.getChannels().containsKey("channel_dont_exist"));
-        Assert.assertTrue(response.getChannels().containsKey("my_channel"));
+        assertEquals(response.getChannels().size(), 1);
+        assertFalse(response.getChannels().containsKey("channel_dont_exist"));
+        assertTrue(response.getChannels().containsKey("my_channel"));
         for (Map.Entry<String, Long> stringLongEntry : response.getChannels().entrySet()) {
             assertEquals("my_channel", stringLongEntry.getKey());
             assertEquals(Long.valueOf("19"), stringLongEntry.getValue());
@@ -94,7 +99,7 @@ public class MessageCountTest extends TestHarness {
     }
 
     @Test
-    public void testMultiChannel_withSingleTimestamp() throws PubNubException {
+    public void testMultiChannelwithSingleTimestamp() throws PubNubException {
         stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel,new_channel"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", " +
                         "\"channels\": {\"my_channel\":19, \"new_channel\":5}}")));
@@ -103,10 +108,10 @@ public class MessageCountTest extends TestHarness {
                 messageCounts.channels(Arrays.asList("my_channel", "new_channel"))
                         .timetoken((long) 10000).sync();
 
-        Assert.assertEquals(response.getChannels().size(), 2);
-        Assert.assertFalse(response.getChannels().containsKey("channel_dont_exist"));
-        Assert.assertTrue(response.getChannels().containsKey("my_channel"));
-        Assert.assertTrue(response.getChannels().containsKey("new_channel"));
+        assertEquals(response.getChannels().size(), 2);
+        assertFalse(response.getChannels().containsKey("channel_dont_exist"));
+        assertTrue(response.getChannels().containsKey("my_channel"));
+        assertTrue(response.getChannels().containsKey("new_channel"));
         for (Map.Entry<String, Long> stringLongEntry : response.getChannels().entrySet()) {
             if (stringLongEntry.getKey().equals("my_channel")) {
                 assertEquals(Long.valueOf("19"), stringLongEntry.getValue());
@@ -117,7 +122,7 @@ public class MessageCountTest extends TestHarness {
     }
 
     @Test
-    public void testMultiChannel_withMultiTimestamp() throws PubNubException {
+    public void testMultiChannelwithMultiTimestamp() throws PubNubException {
         stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel,new_channel"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", " +
                         "\"channels\": {\"my_channel\":19, \"new_channel\":5}}")));
@@ -126,10 +131,10 @@ public class MessageCountTest extends TestHarness {
                 messageCounts.channels(Arrays.asList("my_channel", "new_channel"))
                         .channelsTimetoken(Arrays.asList((long) 10000, (long) 20000)).sync();
 
-        Assert.assertEquals(response.getChannels().size(), 2);
-        Assert.assertFalse(response.getChannels().containsKey("channel_dont_exist"));
-        Assert.assertTrue(response.getChannels().containsKey("my_channel"));
-        Assert.assertTrue(response.getChannels().containsKey("new_channel"));
+        assertEquals(response.getChannels().size(), 2);
+        assertFalse(response.getChannels().containsKey("channel_dont_exist"));
+        assertTrue(response.getChannels().containsKey("my_channel"));
+        assertTrue(response.getChannels().containsKey("new_channel"));
         for (Map.Entry<String, Long> stringLongEntry : response.getChannels().entrySet()) {
             if (stringLongEntry.getKey().equals("my_channel")) {
                 assertEquals(Long.valueOf("19"), stringLongEntry.getValue());
@@ -157,7 +162,7 @@ public class MessageCountTest extends TestHarness {
     }
 
     @Test
-    public void testWithoutChannels_SingleTimeToken() {
+    public void testWithoutChannelsSingleTimeToken() {
         stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", " +
                         "\"channels\": {\"my_channel\":19, \"new_channel\":5}}")));
@@ -174,7 +179,7 @@ public class MessageCountTest extends TestHarness {
     }
 
     @Test
-    public void testWithoutChannels_TimeTokenList() {
+    public void testWithoutChannelsTimeTokenList() {
         stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", " +
                         "\"channels\": {\"my_channel\":19, \"new_channel\":5}}")));
@@ -191,7 +196,7 @@ public class MessageCountTest extends TestHarness {
     }
 
     @Test
-    public void testSingleChannel_withTwoTokens() throws PubNubException {
+    public void testSingleChannelwithTwoTokens() throws PubNubException {
         stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", " +
                         "\"channels\": {\"my_channel\":19}}")));
@@ -201,10 +206,10 @@ public class MessageCountTest extends TestHarness {
                         .channelsTimetoken(Arrays.asList((long) 10000, (long) 20000))
                         .timetoken((long) 10000).sync();
 
-        Assert.assertEquals(response.getChannels().size(), 1);
-        Assert.assertFalse(response.getChannels().containsKey("channel_dont_exist"));
-        Assert.assertTrue(response.getChannels().containsKey("my_channel"));
-        Assert.assertFalse(response.getChannels().containsKey("new_channel"));
+        assertEquals(response.getChannels().size(), 1);
+        assertFalse(response.getChannels().containsKey("channel_dont_exist"));
+        assertTrue(response.getChannels().containsKey("my_channel"));
+        assertFalse(response.getChannels().containsKey("new_channel"));
         for (Map.Entry<String, Long> stringLongEntry : response.getChannels().entrySet()) {
             if (stringLongEntry.getKey().equals("my_channel")) {
                 assertEquals(Long.valueOf("19"), stringLongEntry.getValue());
@@ -215,7 +220,7 @@ public class MessageCountTest extends TestHarness {
     }
 
     @Test
-    public void testMultiChannel_withTwoTokens() throws PubNubException {
+    public void testMultiChannelwithTwoTokens() throws PubNubException {
         stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel,new_channel"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", " +
                         "\"channels\": {\"my_channel\":19, \"new_channel\":5}}")));
@@ -225,10 +230,10 @@ public class MessageCountTest extends TestHarness {
                         .channelsTimetoken(Arrays.asList((long) 10000, (long) 20000))
                         .timetoken((long) 10000).sync();
 
-        Assert.assertEquals(response.getChannels().size(), 2);
-        Assert.assertFalse(response.getChannels().containsKey("channel_dont_exist"));
-        Assert.assertTrue(response.getChannels().containsKey("my_channel"));
-        Assert.assertTrue(response.getChannels().containsKey("new_channel"));
+        assertEquals(response.getChannels().size(), 2);
+        assertFalse(response.getChannels().containsKey("channel_dont_exist"));
+        assertTrue(response.getChannels().containsKey("my_channel"));
+        assertTrue(response.getChannels().containsKey("new_channel"));
         for (Map.Entry<String, Long> stringLongEntry : response.getChannels().entrySet()) {
             if (stringLongEntry.getKey().equals("my_channel")) {
                 assertEquals(Long.valueOf("19"), stringLongEntry.getValue());
@@ -239,7 +244,7 @@ public class MessageCountTest extends TestHarness {
     }
 
     @Test
-    public void testChannel_withSingleEmptyToken() {
+    public void testChannelwithSingleEmptyToken() {
         stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", " +
                         "\"channels\": {\"my_channel\":19}}")));
@@ -257,7 +262,7 @@ public class MessageCountTest extends TestHarness {
     }
 
     @Test
-    public void testChannel_withMultiEmptyToken() {
+    public void testChannelwithMultiEmptyToken() {
         stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", " +
                         "\"channels\": {\"my_channel\":19}}")));
@@ -275,7 +280,7 @@ public class MessageCountTest extends TestHarness {
     }
 
     @Test
-    public void testChannel_withMultiNullToken() {
+    public void testChannelwithMultiNullToken() {
         stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", " +
                         "\"channels\": {\"my_channel\":19}}")));
