@@ -1,12 +1,17 @@
 name: java
-version: 4.22.0-beta
+version: 4.22.1-beta
 schema: 1
 scm: github.com/pubnub/java
 files:
-  - build/libs/pubnub-gson-4.22.0-beta-all.jar
+  - build/libs/pubnub-gson-4.22.1-beta-all.jar
 changelog:
+  - version: v4.22.1-beta
+    date: 2019-02-26
+    changes:
+      - type: feature
+        text: Introduce Message Count API
   - version: v4.22.0-beta
-    date: 2018-01-31
+    date: 2019-01-31
     changes:
       - type: feature
         text: Update 3rd party libraries
@@ -367,6 +372,7 @@ features:
     - STORAGE-COUNT
     - STORAGE-FETCH-MESSAGES
     - STORAGE-DELETE-MESSAGES
+    - STORAGE-MESSAGE-COUNT
   time:
     - TIME-TIME
   subscribe:
