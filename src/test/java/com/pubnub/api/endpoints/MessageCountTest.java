@@ -239,7 +239,6 @@ public class MessageCountTest extends TestHarness {
         }
     }
 
-
     @Test
     public void testChannelWithMultipleNullTokens() {
         stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel"))
