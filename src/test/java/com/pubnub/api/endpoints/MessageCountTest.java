@@ -3,6 +3,7 @@ package com.pubnub.api.endpoints;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.models.consumer.history.PNMessageCountResult;
 import org.junit.After;
 import org.junit.Before;
@@ -11,6 +12,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -18,7 +20,10 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 
 public class MessageCountTest extends TestHarness {
@@ -26,13 +31,11 @@ public class MessageCountTest extends TestHarness {
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(options().port(this.PORT), false);
 
-    private MessageCounts messageCounts;
     private PubNub pubnub;
 
     @Before
     public void beforeEach() throws IOException {
         pubnub = this.createPubNubInstance();
-        messageCounts = pubnub.messageCounts();
         wireMockRule.start();
     }
 
@@ -45,6 +48,7 @@ public class MessageCountTest extends TestHarness {
 
     @Test
     public void testSyncDisabled() {
+
         String payload = "[\"Use of the history API requires the Storage & Playback which is not enabled for this " +
                 "subscribe key.Login to your PubNub Dashboard Account and enable Storage & Playback.Contact support " +
                 "@pubnub.com if you require further assistance.\",0,0]";
@@ -53,25 +57,28 @@ public class MessageCountTest extends TestHarness {
                 .willReturn(aResponse().withBody(payload)));
 
         try {
-            messageCounts.channels(Arrays.asList("my_channel"))
-                    .timetoken((long) 10000).sync();
+            pubnub.messageCounts()
+                    .channels(Collections.singletonList("my_channel"))
+                    .channelsTimetoken(Collections.singletonList(10000L))
+                    .sync();
         } catch (PubNubException ex) {
             assertEquals("History is disabled", ex.getErrormsg());
         }
     }
 
     @Test
-    public void testSingleChannelwithSingleTimestamp() throws PubNubException {
+    public void testSingleChannelWithSingleToken() throws PubNubException {
         stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", " +
                         "\"channels\": {\"my_channel\":19}}")));
 
-        PNMessageCountResult response =
-                messageCounts.channels(Arrays.asList("my_channel"))
-                        .timetoken((long) 10000).sync();
+        PNMessageCountResult response = pubnub.messageCounts()
+                .channels(Collections.singletonList("my_channel"))
+                .channelsTimetoken(Collections.singletonList(10000L))
+                .sync();
 
         assertEquals(response.getChannels().size(), 1);
-        assertFalse(response.getChannels().containsKey("channel_dont_exist"));
+        assertFalse(response.getChannels().containsKey("channel_does_not_exist"));
         assertTrue(response.getChannels().containsKey("my_channel"));
         for (Map.Entry<String, Long> stringLongEntry : response.getChannels().entrySet()) {
             assertEquals("my_channel", stringLongEntry.getKey());
@@ -80,38 +87,43 @@ public class MessageCountTest extends TestHarness {
     }
 
     @Test
-    public void testSingleChannelwithMultiTimestamp() throws PubNubException {
+    public void testSingleChannelWithMultipleTokens() {
         stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", " +
                         "\"channels\": {\"my_channel\":19}}")));
 
-        PNMessageCountResult response =
-                messageCounts.channels(Arrays.asList("my_channel"))
-                        .channelsTimetoken(Arrays.asList((long) 10000, (long) 20000)).sync();
+        PubNubException exception = null;
 
-        assertEquals(response.getChannels().size(), 1);
-        assertFalse(response.getChannels().containsKey("channel_dont_exist"));
-        assertTrue(response.getChannels().containsKey("my_channel"));
-        for (Map.Entry<String, Long> stringLongEntry : response.getChannels().entrySet()) {
-            assertEquals("my_channel", stringLongEntry.getKey());
-            assertEquals(Long.valueOf("19"), stringLongEntry.getValue());
+        try {
+            pubnub.messageCounts()
+                    .channels(Collections.singletonList("my_channel"))
+                    .channelsTimetoken(Arrays.asList(10000L, 20000L))
+                    .sync();
+        } catch (PubNubException e) {
+            exception = e;
+        } finally {
+            assertNotNull(exception);
+            assertEquals(PubNubErrorBuilder.PNERROBJ_CHANNELS_TIMETOKEN_MISMATCH.getMessage(),
+                    exception.getPubnubError().getMessage());
         }
     }
 
     @Test
-    public void testMultiChannelwithSingleTimestamp() throws PubNubException {
+    public void testMultipleChannelsWithSingleToken() throws PubNubException {
         stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel,new_channel"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", " +
                         "\"channels\": {\"my_channel\":19, \"new_channel\":5}}")));
 
-        PNMessageCountResult response =
-                messageCounts.channels(Arrays.asList("my_channel", "new_channel"))
-                        .timetoken((long) 10000).sync();
+        PNMessageCountResult response = pubnub.messageCounts()
+                .channels(Arrays.asList("my_channel", "new_channel"))
+                .channelsTimetoken(Collections.singletonList(10000L))
+                .sync();
 
         assertEquals(response.getChannels().size(), 2);
-        assertFalse(response.getChannels().containsKey("channel_dont_exist"));
+        assertFalse(response.getChannels().containsKey("channel_does_not_exist"));
         assertTrue(response.getChannels().containsKey("my_channel"));
         assertTrue(response.getChannels().containsKey("new_channel"));
+
         for (Map.Entry<String, Long> stringLongEntry : response.getChannels().entrySet()) {
             if (stringLongEntry.getKey().equals("my_channel")) {
                 assertEquals(Long.valueOf("19"), stringLongEntry.getValue());
@@ -122,19 +134,21 @@ public class MessageCountTest extends TestHarness {
     }
 
     @Test
-    public void testMultiChannelwithMultiTimestamp() throws PubNubException {
+    public void testMultipleChannelsWithMultipleTokens() throws PubNubException {
         stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel,new_channel"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", " +
                         "\"channels\": {\"my_channel\":19, \"new_channel\":5}}")));
 
-        PNMessageCountResult response =
-                messageCounts.channels(Arrays.asList("my_channel", "new_channel"))
-                        .channelsTimetoken(Arrays.asList((long) 10000, (long) 20000)).sync();
+        PNMessageCountResult response = pubnub.messageCounts()
+                .channels(Arrays.asList("my_channel", "new_channel"))
+                .channelsTimetoken(Arrays.asList(10000L, 20000L))
+                .sync();
 
         assertEquals(response.getChannels().size(), 2);
-        assertFalse(response.getChannels().containsKey("channel_dont_exist"));
+        assertFalse(response.getChannels().containsKey("channel_does_not_exist"));
         assertTrue(response.getChannels().containsKey("my_channel"));
         assertTrue(response.getChannels().containsKey("new_channel"));
+
         for (Map.Entry<String, Long> stringLongEntry : response.getChannels().entrySet()) {
             if (stringLongEntry.getKey().equals("my_channel")) {
                 assertEquals(Long.valueOf("19"), stringLongEntry.getValue());
@@ -152,149 +166,99 @@ public class MessageCountTest extends TestHarness {
 
         PubNubException exception = null;
         try {
-            messageCounts.channels(Arrays.asList("my_channel")).sync();
+            pubnub.messageCounts()
+                    .channels(Collections.singletonList("my_channel"))
+                    .sync();
         } catch (PubNubException ex) {
             exception = ex;
         } finally {
             assertNotNull(exception);
-            assertEquals("Timetoken Missing.", exception.getPubnubError().getMessage());
+            assertEquals(PubNubErrorBuilder.PNERROBJ_TIMETOKEN_MISSING.getMessage(),
+                    exception.getPubnubError().getMessage());
         }
     }
 
     @Test
-    public void testWithoutChannelsSingleTimeToken() {
+    public void testWithoutChannelsSingleToken() {
         stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", " +
                         "\"channels\": {\"my_channel\":19, \"new_channel\":5}}")));
 
         PubNubException exception = null;
         try {
-            messageCounts.timetoken((long) 10000).sync();
+            pubnub.messageCounts()
+                    .channelsTimetoken(Collections.singletonList(10000L))
+                    .sync();
         } catch (PubNubException ex) {
             exception = ex;
         } finally {
             assertNotNull(exception);
-            assertEquals("Channel Missing.", exception.getPubnubError().getMessage());
+            assertEquals(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING.getMessage(),
+                    exception.getPubnubError().getMessage());
         }
     }
 
     @Test
-    public void testWithoutChannelsTimeTokenList() {
+    public void testWithoutChannelsMultipleTokens() {
         stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", " +
                         "\"channels\": {\"my_channel\":19, \"new_channel\":5}}")));
 
         PubNubException exception = null;
         try {
-            messageCounts.channelsTimetoken(Arrays.asList((long) 10000, (long) 20000)).sync();
+            pubnub.messageCounts()
+                    .channelsTimetoken(Arrays.asList(10000L, 20000L))
+                    .sync();
         } catch (PubNubException ex) {
             exception = ex;
         } finally {
             assertNotNull(exception);
-            assertEquals("Channel Missing.", exception.getPubnubError().getMessage());
+            assertEquals(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING.getMessage(),
+                    exception.getPubnubError().getMessage());
         }
     }
 
     @Test
-    public void testSingleChannelwithTwoTokens() throws PubNubException {
-        stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", " +
-                        "\"channels\": {\"my_channel\":19}}")));
-
-        PNMessageCountResult response =
-                messageCounts.channels(Arrays.asList("my_channel"))
-                        .channelsTimetoken(Arrays.asList((long) 10000, (long) 20000))
-                        .timetoken((long) 10000).sync();
-
-        assertEquals(response.getChannels().size(), 1);
-        assertFalse(response.getChannels().containsKey("channel_dont_exist"));
-        assertTrue(response.getChannels().containsKey("my_channel"));
-        assertFalse(response.getChannels().containsKey("new_channel"));
-        for (Map.Entry<String, Long> stringLongEntry : response.getChannels().entrySet()) {
-            if (stringLongEntry.getKey().equals("my_channel")) {
-                assertEquals(Long.valueOf("19"), stringLongEntry.getValue());
-            } else if (stringLongEntry.getKey().equals("new_channel")) {
-                assertEquals(Long.valueOf("5"), stringLongEntry.getValue());
-            }
-        }
-    }
-
-    @Test
-    public void testMultiChannelwithTwoTokens() throws PubNubException {
-        stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel,new_channel"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", " +
-                        "\"channels\": {\"my_channel\":19, \"new_channel\":5}}")));
-
-        PNMessageCountResult response =
-                messageCounts.channels(Arrays.asList("my_channel", "new_channel"))
-                        .channelsTimetoken(Arrays.asList((long) 10000, (long) 20000))
-                        .timetoken((long) 10000).sync();
-
-        assertEquals(response.getChannels().size(), 2);
-        assertFalse(response.getChannels().containsKey("channel_dont_exist"));
-        assertTrue(response.getChannels().containsKey("my_channel"));
-        assertTrue(response.getChannels().containsKey("new_channel"));
-        for (Map.Entry<String, Long> stringLongEntry : response.getChannels().entrySet()) {
-            if (stringLongEntry.getKey().equals("my_channel")) {
-                assertEquals(Long.valueOf("19"), stringLongEntry.getValue());
-            } else if (stringLongEntry.getKey().equals("new_channel")) {
-                assertEquals(Long.valueOf("5"), stringLongEntry.getValue());
-            }
-        }
-    }
-
-    @Test
-    public void testChannelwithSingleEmptyToken() {
+    public void testChannelWithSingleEmptyToken() {
         stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", " +
                         "\"channels\": {\"my_channel\":19}}")));
 
         PubNubException exception = null;
         try {
-            messageCounts.channels(Arrays.asList("my_channel"))
-                    .timetoken(null).sync();
+            pubnub.messageCounts()
+                    .channels(Collections.singletonList("my_channel"))
+                    .channelsTimetoken(Collections.singletonList(null))
+                    .sync();
         } catch (PubNubException ex) {
             exception = ex;
         } finally {
             assertNotNull(exception);
-            assertEquals("Timetoken Missing.", exception.getPubnubError().getMessage());
+            assertEquals(PubNubErrorBuilder.PNERROBJ_TIMETOKEN_MISSING.getMessage(),
+                    exception.getPubnubError().getMessage());
         }
     }
 
     @Test
-    public void testChannelwithMultiEmptyToken() {
+    public void testChannelWithMultipleNullTokens() {
         stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", " +
                         "\"channels\": {\"my_channel\":19}}")));
 
         PubNubException exception = null;
         try {
-            messageCounts.channels(Arrays.asList("my_channel"))
-                    .channelsTimetoken(Arrays.asList()).sync();
+            pubnub.messageCounts()
+                    .channels(Arrays.asList("my_channel", "my_channel_1", "my_channel_2"))
+                    .channelsTimetoken(Arrays.asList(10000L, null, 20000L))
+                    .sync();
         } catch (PubNubException ex) {
             exception = ex;
         } finally {
             assertNotNull(exception);
-            assertEquals("Timetoken Missing.", exception.getPubnubError().getMessage());
+            assertEquals(PubNubErrorBuilder.PNERROBJ_TIMETOKEN_MISSING.getMessage(),
+                    exception.getPubnubError().getMessage());
         }
     }
 
-    @Test
-    public void testChannelwithMultiNullToken() {
-        stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", " +
-                        "\"channels\": {\"my_channel\":19}}")));
-
-        PubNubException exception = null;
-        try {
-            messageCounts.channels(Arrays.asList("my_channel"))
-                    .channelsTimetoken(null).sync();
-        } catch (PubNubException ex) {
-            exception = ex;
-        } finally {
-            assertNotNull(exception);
-            assertEquals("Timetoken Missing.", exception.getPubnubError().getMessage());
-        }
-    }
 
 }

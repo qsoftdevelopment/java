@@ -236,6 +236,11 @@ public final class PubNubErrorBuilder {
      */
     public static final int PNERR_TIMETOKEN_MISSING = 145;
 
+    /**
+     * Timetoken missing
+     */
+    public static final int PNERR_CHANNELS_TIMETOKEN_MISMATCH = 146;
+
     // Error Objects
     public static final PubNubError PNERROBJ_TIMEOUT = PubNubError.builder()
             .errorCode(PNERR_TIMEOUT)
@@ -467,6 +472,11 @@ public final class PubNubErrorBuilder {
     public static final PubNubError PNERROBJ_TIMETOKEN_MISSING = PubNubError.builder()
             .errorCode(PNERR_TIMETOKEN_MISSING)
             .message("Timetoken Missing.")
+            .build();
+
+    public static final PubNubError PNERROBJ_CHANNELS_TIMETOKEN_MISMATCH = PubNubError.builder()
+            .errorCode(PNERR_CHANNELS_TIMETOKEN_MISMATCH)
+            .message("Channels and timetokens are not equal in size.")
             .build();
 
     private PubNubErrorBuilder() {

@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -188,12 +188,6 @@ extends <a href="../../../../com/pubnub/api/endpoints/Endpoint.html" title="clas
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/pubnub/api/endpoints/MessageCounts.html#isAuthRequired--">isAuthRequired</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i8" class="altColor">
-<td class="colFirst"><code><a href="../../../../com/pubnub/api/endpoints/MessageCounts.html" title="class in com.pubnub.api.endpoints">MessageCounts</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/pubnub/api/endpoints/MessageCounts.html#timetoken-java.lang.Long-">timetoken</a></span>(java.lang.Long&nbsp;timetoken)</code>
-<div class="block">Single timetoken to cover all channels passed in on the request path.</div>
-</td>
-</tr>
-<tr id="i9" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/pubnub/api/endpoints/MessageCounts.html#validateParams--">validateParams</a></span>()</code>&nbsp;</td>
 </tr>
@@ -357,21 +351,6 @@ extends <a href="../../../../com/pubnub/api/endpoints/Endpoint.html" title="clas
 </dl>
 </li>
 </ul>
-<a name="timetoken-java.lang.Long-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>timetoken</h4>
-<pre>public&nbsp;<a href="../../../../com/pubnub/api/endpoints/MessageCounts.html" title="class in com.pubnub.api.endpoints">MessageCounts</a>&nbsp;timetoken(java.lang.Long&nbsp;timetoken)</pre>
-<div class="block">Single timetoken to cover all channels passed in on the request path. This parameter is incompatible with
- <a href="../../../../com/pubnub/api/endpoints/MessageCounts.html#channelsTimetoken"><code>channelsTimetoken</code></a>.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>this</dd>
-</dl>
-</li>
-</ul>
 <a name="channelsTimetoken-java.util.List-">
 <!--   -->
 </a>
@@ -380,8 +359,7 @@ extends <a href="../../../../com/pubnub/api/endpoints/Endpoint.html" title="clas
 <h4>channelsTimetoken</h4>
 <pre>public&nbsp;<a href="../../../../com/pubnub/api/endpoints/MessageCounts.html" title="class in com.pubnub.api.endpoints">MessageCounts</a>&nbsp;channelsTimetoken(java.util.List&lt;java.lang.Long&gt;&nbsp;channelsTimetoken)</pre>
 <div class="block">Comma-delimited list of timetokens, in order of the channels list, in the request path. If list of timetokens
- is not same length as list of channels, a 400 bad request will result. This parameter is incompatible with
- <a href="../../../../com/pubnub/api/endpoints/MessageCounts.html#timetoken"><code>timetoken</code></a>.</div>
+ is not same length as list of channels, a 400 bad request will result.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>this</dd>

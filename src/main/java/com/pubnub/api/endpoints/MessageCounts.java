@@ -31,16 +31,8 @@ public class MessageCounts extends Endpoint<JsonElement, PNMessageCountResult> {
     private List<String> channels;
 
     /**
-     * Single timetoken to cover all channels passed in on the request path. This parameter is incompatible with
-     * {@link MessageCounts#channelsTimetoken}.
-     */
-    @Setter
-    private Long timetoken;
-
-    /**
      * Comma-delimited list of timetokens, in order of the channels list, in the request path. If list of timetokens
-     * is not same length as list of channels, a 400 bad request will result. This parameter is incompatible with
-     * {@link MessageCounts#timetoken}.
+     * is not same length as list of channels, a 400 bad request will result.
      */
     @Setter
     private List<Long> channelsTimetoken;
@@ -65,18 +57,22 @@ public class MessageCounts extends Endpoint<JsonElement, PNMessageCountResult> {
         if (channels == null || channels.isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING).build();
         }
-        if ((channelsTimetoken == null || channelsTimetoken.isEmpty()) && (timetoken == null)) {
+        if ((channelsTimetoken == null || channelsTimetoken.isEmpty()) || channelsTimetoken.contains(null)) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_TIMETOKEN_MISSING).build();
+        }
+        if (channelsTimetoken.size() != channels.size() && channelsTimetoken.size() > 1) {
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CHANNELS_TIMETOKEN_MISMATCH)
+                    .build();
         }
     }
 
     @Override
     protected Call<JsonElement> doWork(Map<String, String> params) {
 
-        if (channelsTimetoken != null && !channelsTimetoken.isEmpty()) {
+        if (channelsTimetoken.size() == 1) {
+            params.put("timetoken", PubNubUtil.joinLong(channelsTimetoken, ","));
+        } else {
             params.put("channelsTimetoken", PubNubUtil.joinLong(channelsTimetoken, ","));
-        } else if (timetoken != null) {
-            params.put("timetoken", Long.toString(timetoken).toLowerCase());
         }
 
         return this.getRetrofit()
