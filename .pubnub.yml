@@ -6,7 +6,7 @@ files:
   - build/libs/pubnub-gson-4.22.0-all.jar
 changelog:
   - version: v4.22.0
-    date: 2019-04-19
+    date: 2019-04-26
     changes:
       - type: feature
         text: Introduce Message Count API
