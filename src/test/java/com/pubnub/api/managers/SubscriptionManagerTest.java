@@ -803,6 +803,7 @@ public class SubscriptionManagerTest extends TestHarness {
                         "\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\"," +
                         "\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
 
+        pubnub.getConfiguration().setPresenceTimeout(20);
         pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
         pubnub.addListener(new SubscribeCallback() {
             @Override
@@ -1455,6 +1456,7 @@ public class SubscriptionManagerTest extends TestHarness {
     public void testAllHeartbeats() {
 
         final AtomicBoolean statusRecieved = new AtomicBoolean();
+        pubnub.getConfiguration().setPresenceTimeout(20);
         pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
@@ -1497,6 +1499,7 @@ public class SubscriptionManagerTest extends TestHarness {
     public void testAllHeartbeatsViaPresence() {
 
         final AtomicBoolean statusRecieved = new AtomicBoolean();
+        pubnub.getConfiguration().setPresenceTimeout(20);
         pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
@@ -1573,6 +1576,7 @@ public class SubscriptionManagerTest extends TestHarness {
     public void testSuccessOnFailureVerbosityHeartbeats() {
 
         final AtomicBoolean statusRecieved = new AtomicBoolean();
+        pubnub.getConfiguration().setPresenceTimeout(20);
         pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.FAILURES);
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))
@@ -1612,6 +1616,7 @@ public class SubscriptionManagerTest extends TestHarness {
     public void testFailedHeartbeats() {
 
         final AtomicBoolean statusRecieved = new AtomicBoolean();
+        pubnub.getConfiguration().setPresenceTimeout(20);
         pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))

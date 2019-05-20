@@ -182,7 +182,7 @@ public class PNConfiguration {
      * Initialize the PNConfiguration with default values
      */
     public PNConfiguration() {
-        setPresenceTimeout(PRESENCE_TIMEOUT);
+        setPresenceTimeoutWithCustomInterval(PRESENCE_TIMEOUT, 0);
 
         uuid = "pn-" + UUID.randomUUID().toString();
 
