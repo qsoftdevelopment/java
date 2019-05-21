@@ -240,11 +240,12 @@ public class PNConfiguration {
     }
 
     private int validatePresenceTimeout(int timeout) {
+        int validTimeout = timeout;
         if (timeout < MINIMUM_PRESENCE_TIMEOUT) {
-            timeout = MINIMUM_PRESENCE_TIMEOUT;
+            validTimeout = MINIMUM_PRESENCE_TIMEOUT;
             log.warning("Presence timeout is too low. Defaulting to: " + MINIMUM_PRESENCE_TIMEOUT);
         }
-        return timeout;
+        return validTimeout;
     }
 
 }
