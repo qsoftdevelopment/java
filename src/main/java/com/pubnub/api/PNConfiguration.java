@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.extern.java.Log;
 import okhttp3.Authenticator;
 import okhttp3.CertificatePinner;
 import okhttp3.ConnectionSpec;
@@ -24,9 +25,11 @@ import java.util.UUID;
 @Setter
 @Accessors(chain = true)
 
+@Log
 public class PNConfiguration {
     private static final int DEFAULT_DEDUPE_SIZE = 100;
     private static final int PRESENCE_TIMEOUT = 300;
+    private static final int MINIMUM_PRESENCE_TIMEOUT = 20;
     private static final int NON_SUBSCRIBE_REQUEST_TIMEOUT = 10;
     private static final int SUBSCRIBE_TIMEOUT = 310;
     private static final int CONNECT_TIMEOUT = 5;
@@ -218,6 +221,7 @@ public class PNConfiguration {
      * @return returns itself.
      */
     public PNConfiguration setPresenceTimeoutWithCustomInterval(int timeout, int interval) {
+        timeout = validatePresenceTimeout(timeout);
         this.presenceTimeout = timeout;
         this.heartbeatInterval = interval;
 
@@ -231,7 +235,16 @@ public class PNConfiguration {
      * @return returns itself.
      */
     public PNConfiguration setPresenceTimeout(int timeout) {
+        timeout = validatePresenceTimeout(timeout);
         return setPresenceTimeoutWithCustomInterval(timeout, (timeout / 2) - 1);
+    }
+
+    private int validatePresenceTimeout(int timeout) {
+        if (timeout < MINIMUM_PRESENCE_TIMEOUT) {
+            timeout = MINIMUM_PRESENCE_TIMEOUT;
+            log.warning("Presence timeout is too low. Defaulting to: " + MINIMUM_PRESENCE_TIMEOUT);
+        }
+        return timeout;
     }
 
 }
