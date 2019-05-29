@@ -113,6 +113,8 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
 
         params.put("heartbeat", String.valueOf(this.getPubnub().getConfiguration().getPresenceTimeout()));
 
+        params.putAll(encodeParams(params));
+
         return this.getRetrofit().getSubscribeService()
                 .subscribe(this.getPubnub().getConfiguration().getSubscribeKey(), channelCSV, params);
     }
