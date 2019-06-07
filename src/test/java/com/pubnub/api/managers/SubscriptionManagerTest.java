@@ -837,8 +837,6 @@ public class SubscriptionManagerTest extends TestHarness {
                 for (LoggedRequest request : heartbeatRequests) {
                     if (!request.getQueryParams().containsKey("state")) {
                         heartbeatHits.getAndAdd(1);
-                    } else {
-                        throw new RuntimeException("Heartbeat call shouldn't contain state param");
                     }
                 }
             }
