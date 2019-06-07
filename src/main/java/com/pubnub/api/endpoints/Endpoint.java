@@ -25,7 +25,11 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public abstract class Endpoint<Input, Output> {
 
@@ -346,8 +350,9 @@ public abstract class Endpoint<Input, Output> {
 
     protected Map<String, String> encodeParams(Map<String, String> params) {
         Map<String, String> encodedParams = new HashMap<>(params);
-        if (encodedParams.containsKey("auth"))
+        if (encodedParams.containsKey("auth")) {
             encodedParams.put("auth", PubNubUtil.urlEncode(encodedParams.get("auth")));
+        }
         return encodedParams;
     }
 

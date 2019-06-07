@@ -988,8 +988,8 @@ public class GrantEndpointTest extends TestHarness {
         try {
             PNAccessManagerGrantResult grantResult = partialGrant.sync();
             Assert.assertNotNull(grantResult);
-            Assert.assertEquals("subkey", grantResult.getLevel());
-            Assert.assertEquals(1440, grantResult.getTtl());
+            assertEquals("subkey", grantResult.getLevel());
+            assertEquals(1440, grantResult.getTtl());
             assertEquals(0, grantResult.getChannels().size());
             assertEquals(0, grantResult.getChannelGroups().size());
         } catch (PubNubException e) {
