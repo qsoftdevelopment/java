@@ -22,6 +22,7 @@ import com.pubnub.api.endpoints.presence.HereNow;
 import com.pubnub.api.endpoints.presence.SetState;
 import com.pubnub.api.endpoints.presence.WhereNow;
 import com.pubnub.api.endpoints.pubsub.Publish;
+import com.pubnub.api.endpoints.pubsub.Signal;
 import com.pubnub.api.endpoints.push.AddChannelsToPush;
 import com.pubnub.api.endpoints.push.ListPushProvisions;
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice;
@@ -168,6 +169,10 @@ public class PubNub {
 
     public Publish publish() {
         return new Publish(this, publishSequenceManager, this.telemetryManager, this.retrofitManager);
+    }
+
+    public Signal signal() {
+        return new Signal(this, this.telemetryManager, this.retrofitManager);
     }
 
     public ListAllChannelGroup listAllChannelGroups() {
