@@ -10,7 +10,6 @@ import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.PNPublishResult;
-import com.pubnub.api.vendor.Crypto;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
@@ -80,17 +79,7 @@ public class Signal extends Endpoint<List<Object>, PNPublishResult> {
             params.put("meta", stringifiedMeta);
         }
 
-        if (this.getPubnub().getConfiguration().getCipherKey() != null) {
-            Crypto crypto = new Crypto(this.getPubnub().getConfiguration().getCipherKey());
-            stringifiedMessage = crypto.encrypt(stringifiedMessage).replace("\n", "");
-        }
-
-
         params.putAll(encodeParams(params));
-
-        if (this.getPubnub().getConfiguration().getCipherKey() != null) {
-            stringifiedMessage = "\"".concat(stringifiedMessage).concat("\"");
-        }
 
         stringifiedMessage = PubNubUtil.urlEncode(stringifiedMessage);
 
