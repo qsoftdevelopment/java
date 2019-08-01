@@ -17,7 +17,6 @@ import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import org.awaitility.Awaitility;
 import org.awaitility.Duration;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -144,9 +143,9 @@ public class SignalTest extends TestHarness {
 
             @Override
             public void signal(PubNub pubnub, PNMessageResult signal) {
-                Assert.assertEquals("coolChannel", signal.getChannel());
-                Assert.assertEquals("hello", signal.getMessage().getAsString());
-                Assert.assertEquals("uuid", signal.getPublisher());
+                assertEquals("coolChannel", signal.getChannel());
+                assertEquals("hello", signal.getMessage().getAsString());
+                assertEquals("uuid", signal.getPublisher());
                 success.set(true);
             }
         });
@@ -168,7 +167,7 @@ public class SignalTest extends TestHarness {
                     .message(UUID.randomUUID().toString())
                     .sync();
         } catch (PubNubException e) {
-            Assert.assertEquals(PNERROBJ_CHANNEL_MISSING.getMessage(), e.getPubnubError().getMessage());
+            assertEquals(PNERROBJ_CHANNEL_MISSING.getMessage(), e.getPubnubError().getMessage());
         }
     }
 
@@ -179,7 +178,7 @@ public class SignalTest extends TestHarness {
                     .channel(UUID.randomUUID().toString())
                     .sync();
         } catch (PubNubException e) {
-            Assert.assertEquals(PNERROBJ_MESSAGE_MISSING.getMessage(), e.getPubnubError().getMessage());
+            assertEquals(PNERROBJ_MESSAGE_MISSING.getMessage(), e.getPubnubError().getMessage());
         }
     }
 
