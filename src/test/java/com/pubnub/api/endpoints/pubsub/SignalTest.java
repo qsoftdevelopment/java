@@ -37,13 +37,12 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING;
 import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_MISSING;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 public class SignalTest extends TestHarness {
 
@@ -120,7 +119,7 @@ public class SignalTest extends TestHarness {
     @Test
     public void testSignalSuccessReceive() {
 
-        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/coolChannel/0"))
+        stubFor(get(urlMatching("/v2/subscribe/mySubscribeKey/coolChannel/0.*"))
                 .willReturn(aResponse().withBody("{\"m\":[{\"c\":\"coolChannel\",\"f\":\"0\",\"i\":\"uuid\"," +
                         "\"d\":\"hello\",\"e\":1,\"p\":{\"t\":1000,\"r\":1},\"k\":\"mySubscribeKey\"," +
                         "\"b\":\"coolChannel\"}],\"t\":{\"r\":\"56\",\"t\":1000}}")));
@@ -135,7 +134,7 @@ public class SignalTest extends TestHarness {
 
             @Override
             public void message(PubNub pubnub, PNMessageResult message) {
-                fail();
+                throw new RuntimeException("Should never receive a message");
             }
 
             @Override
@@ -156,28 +155,10 @@ public class SignalTest extends TestHarness {
                 .channels(Collections.singletonList("coolChannel"))
                 .execute();
 
+
         Awaitility.await()
                 .atMost(Duration.FIVE_SECONDS)
                 .untilTrue(success);
-    }
-
-    @Test
-    public void testSignalQueryParams() throws PubNubException {
-        stubFor(get(urlMatching("/signal/myPublishKey/mySubscribeKey/0/coolChannel.*"))
-                .willReturn(aResponse().withBody("[1,\"Sent\",\"1000\"]")));
-
-        pubnub.signal()
-                .channel("coolChannel")
-                .message(UUID.randomUUID().toString())
-                .sync();
-
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
-        assertEquals(1, requests.size());
-        LoggedRequest request = requests.get(0);
-
-        // instanceid should never be included in the query string
-        /*assertFalse(pubnub.getConfiguration().isIncludeInstanceIdentifier()
-                && request.getQueryParams().containsKey("instanceid"));*/
     }
 
     @Test
@@ -200,6 +181,28 @@ public class SignalTest extends TestHarness {
         } catch (PubNubException e) {
             Assert.assertEquals(PNERROBJ_MESSAGE_MISSING.getMessage(), e.getPubnubError().getMessage());
         }
+    }
+
+    @Test
+    public void testSignalTelemetryParam() throws PubNubException {
+        stubFor(get(urlMatching("/signal/myPublishKey/mySubscribeKey/0/coolChannel.*"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"1000\"]")));
+
+        stubFor(get(urlMatching("/time/0.*"))
+                .willReturn(aResponse().withBody("[1000]")));
+
+        pubnub.signal()
+                .channel("coolChannel")
+                .message(UUID.randomUUID().toString())
+                .sync();
+
+        pubnub.time()
+                .sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/time/0.*")));
+        assertEquals(1, requests.size());
+        LoggedRequest request = requests.get(0);
+        assertTrue(request.queryParameter("l_sig").isPresent());
     }
 
     @Test
