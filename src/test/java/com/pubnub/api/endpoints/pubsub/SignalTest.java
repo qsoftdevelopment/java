@@ -13,6 +13,7 @@ import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
+import okhttp3.HttpUrl;
 import org.awaitility.Awaitility;
 import org.awaitility.Duration;
 import org.junit.After;
@@ -78,8 +79,11 @@ public class SignalTest extends TestHarness {
         assertEquals(1, requests.size());
         LoggedRequest request = requests.get(0);
         assertEquals("myUUID", request.queryParameter("uuid").firstValue());
-    }
 
+        HttpUrl httpUrl = HttpUrl.parse(request.getAbsoluteUrl());
+        String decodedSignalPayload = httpUrl.pathSegments().get(httpUrl.pathSize() - 1);
+        assertEquals(pubNub.getMapper().toJson(payload), decodedSignalPayload);
+    }
 
     @Test
     public void testSignalGetSuccessAsync() {
