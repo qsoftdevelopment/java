@@ -28,9 +28,6 @@ public class Signal extends Endpoint<List<Object>, PNPublishResult> {
     @Setter
     private String channel;
 
-    @Setter
-    private Object meta;
-
     public Signal(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
         super(pubnub, telemetryManager, retrofit);
     }
@@ -72,13 +69,7 @@ public class Signal extends Endpoint<List<Object>, PNPublishResult> {
         MapperManager mapper = this.getPubnub().getMapper();
 
         String stringifiedMessage = mapper.toJson(message);
-
-        if (meta != null) {
-            String stringifiedMeta = mapper.toJson(meta);
-            stringifiedMeta = PubNubUtil.urlEncode(stringifiedMeta);
-            params.put("meta", stringifiedMeta);
-        }
-
+        
         params.putAll(encodeParams(params));
 
         stringifiedMessage = PubNubUtil.urlEncode(stringifiedMessage);

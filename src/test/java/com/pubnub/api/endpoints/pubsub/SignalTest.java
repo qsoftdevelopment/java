@@ -5,7 +5,6 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.endpoints.TestHarness;
@@ -72,7 +71,6 @@ public class SignalTest extends TestHarness {
 
         pubNub.signal()
                 .channel("coolChannel")
-                .meta(payload)
                 .message(payload)
                 .sync();
 
@@ -80,8 +78,6 @@ public class SignalTest extends TestHarness {
         assertEquals(1, requests.size());
         LoggedRequest request = requests.get(0);
         assertEquals("myUUID", request.queryParameter("uuid").firstValue());
-        assertEquals(PubNubUtil.urlDecode(pubNub.getMapper().toJson(payload)), request.queryParameter("meta")
-                .firstValue());
     }
 
 
