@@ -69,7 +69,7 @@ public class Signal extends Endpoint<List<Object>, PNPublishResult> {
         MapperManager mapper = this.getPubnub().getMapper();
 
         String stringifiedMessage = mapper.toJson(message);
-        
+
         params.putAll(encodeParams(params));
 
         stringifiedMessage = PubNubUtil.urlEncode(stringifiedMessage);
