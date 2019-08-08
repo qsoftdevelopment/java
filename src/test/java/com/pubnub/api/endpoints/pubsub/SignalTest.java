@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -48,18 +47,18 @@ public class SignalTest extends TestHarness {
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(options().port(this.PORT), false);
 
-    private PubNub pubnub;
+    private PubNub pubNub;
 
     @Before
     public void beforeEach() throws IOException {
-        pubnub = this.createPubNubInstance();
+        pubNub = this.createPubNubInstance();
         wireMockRule.start();
     }
 
     @After
     public void afterEach() {
-        pubnub.destroy();
-        pubnub = null;
+        pubNub.destroy();
+        pubNub = null;
         wireMockRule.stop();
     }
 
@@ -71,7 +70,7 @@ public class SignalTest extends TestHarness {
         Map<String, Object> payload = new HashMap<>();
         payload.put("text", "hello");
 
-        pubnub.signal()
+        pubNub.signal()
                 .channel("coolChannel")
                 .meta(payload)
                 .message(payload)
@@ -81,7 +80,7 @@ public class SignalTest extends TestHarness {
         assertEquals(1, requests.size());
         LoggedRequest request = requests.get(0);
         assertEquals("myUUID", request.queryParameter("uuid").firstValue());
-        assertEquals(PubNubUtil.urlDecode(pubnub.getMapper().toJson(payload)), request.queryParameter("meta")
+        assertEquals(PubNubUtil.urlDecode(pubNub.getMapper().toJson(payload)), request.queryParameter("meta")
                 .firstValue());
     }
 
@@ -96,7 +95,7 @@ public class SignalTest extends TestHarness {
 
         final AtomicBoolean success = new AtomicBoolean();
 
-        pubnub.signal()
+        pubNub.signal()
                 .channel("coolChannel")
                 .message(payload)
                 .async(new PNCallback<PNPublishResult>() {
@@ -110,7 +109,7 @@ public class SignalTest extends TestHarness {
                 });
 
         Awaitility.await()
-                .atMost(5, TimeUnit.SECONDS)
+                .atMost(Duration.FIVE_SECONDS)
                 .untilTrue(success);
 
     }
@@ -125,7 +124,7 @@ public class SignalTest extends TestHarness {
 
         AtomicBoolean success = new AtomicBoolean();
 
-        pubnub.addListener(new SubscribeCallback() {
+        pubNub.addListener(new SubscribeCallback() {
             @Override
             public void status(PubNub pubnub, PNStatus status) {
 
@@ -150,7 +149,7 @@ public class SignalTest extends TestHarness {
             }
         });
 
-        pubnub.subscribe()
+        pubNub.subscribe()
                 .channels(Collections.singletonList("coolChannel"))
                 .execute();
 
@@ -163,7 +162,7 @@ public class SignalTest extends TestHarness {
     @Test
     public void testSignalFailNoChannel() {
         try {
-            pubnub.signal()
+            pubNub.signal()
                     .message(UUID.randomUUID().toString())
                     .sync();
         } catch (PubNubException e) {
@@ -174,7 +173,7 @@ public class SignalTest extends TestHarness {
     @Test
     public void testSignalFailNoMessage() {
         try {
-            pubnub.signal()
+            pubNub.signal()
                     .channel(UUID.randomUUID().toString())
                     .sync();
         } catch (PubNubException e) {
@@ -190,12 +189,12 @@ public class SignalTest extends TestHarness {
         stubFor(get(urlMatching("/time/0.*"))
                 .willReturn(aResponse().withBody("[1000]")));
 
-        pubnub.signal()
+        pubNub.signal()
                 .channel("coolChannel")
                 .message(UUID.randomUUID().toString())
                 .sync();
 
-        pubnub.time()
+        pubNub.time()
                 .sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/time/0.*")));
@@ -209,7 +208,7 @@ public class SignalTest extends TestHarness {
         stubFor(get(urlMatching("/signal/myPublishKey/mySubscribeKey/0/coolChannel.*"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"1000\"]")));
 
-        pubnub.signal()
+        pubNub.signal()
                 .channel("coolChannel")
                 .message(UUID.randomUUID().toString())
                 .sync();
