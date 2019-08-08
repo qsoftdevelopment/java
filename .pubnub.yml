@@ -388,7 +388,6 @@ features:
     - PUBLISH-FIRE
     - PUBLISH-REPLICATION-FLAG
     - PUBLISH-MESSAGE-TTL
-    - PUBLISH-SIGNAL
   storage:
     - STORAGE-REVERSE
     - STORAGE-INCLUDE-TIMETOKEN
@@ -408,6 +407,9 @@ features:
     - SUBSCRIBE-WILDCARD
     - SUBSCRIBE-FILTER-EXPRESSION
     - SUBSCRIBE-PUBLISHER-UUID
+    - SUBSCRIBE-SIGNAL-LISTENER
+  signal:
+    - SIGNAL-SEND
 supported-platforms:
   - version: PubNub Java SDK
     platforms:
