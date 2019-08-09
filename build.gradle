@@ -32,7 +32,7 @@ repositories {
 
 dependencies {
     implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.5.0'
-    implementation group: 'com.squareup.okhttp3', name: 'logging-interceptor', version: '3.12.1'
+    api group: 'com.squareup.okhttp3', name: 'logging-interceptor', version: '3.12.1'
 
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
 
