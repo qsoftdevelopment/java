@@ -5,6 +5,7 @@ import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
+import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +64,12 @@ public class ListenerManager {
     public void announce(PNPresenceEventResult presence) {
         for (SubscribeCallback subscribeCallback : getListeners()) {
             subscribeCallback.presence(this.pubnub, presence);
+        }
+    }
+
+    public void announce(PNSignalResult signal) {
+        for (SubscribeCallback subscribeCallback : getListeners()) {
+            subscribeCallback.signal(this.pubnub, signal);
         }
     }
 
