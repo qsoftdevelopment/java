@@ -17,6 +17,20 @@ import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup;
+import com.pubnub.api.endpoints.objects_api.memberships.manage.member.Members;
+import com.pubnub.api.endpoints.objects_api.memberships.manage.membership.Memberships;
+import com.pubnub.api.endpoints.objects_api.memberships.read.member.GetMembers;
+import com.pubnub.api.endpoints.objects_api.memberships.read.membership.GetMemberships;
+import com.pubnub.api.endpoints.objects_api.spaces.create.CreateSpace;
+import com.pubnub.api.endpoints.objects_api.spaces.delete.DeleteSpace;
+import com.pubnub.api.endpoints.objects_api.spaces.read.GetSpace;
+import com.pubnub.api.endpoints.objects_api.spaces.read.GetSpaces;
+import com.pubnub.api.endpoints.objects_api.spaces.update.UpdateSpace;
+import com.pubnub.api.endpoints.objects_api.users.create.CreateUser;
+import com.pubnub.api.endpoints.objects_api.users.delete.DeleteUser;
+import com.pubnub.api.endpoints.objects_api.users.read.GetUser;
+import com.pubnub.api.endpoints.objects_api.users.read.GetUsers;
+import com.pubnub.api.endpoints.objects_api.users.update.UpdateUser;
 import com.pubnub.api.endpoints.presence.GetState;
 import com.pubnub.api.endpoints.presence.HereNow;
 import com.pubnub.api.endpoints.presence.SetState;
@@ -193,6 +207,62 @@ public class PubNub {
 
     public DeleteChannelGroup deleteChannelGroup() {
         return new DeleteChannelGroup(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    public GetUsers getUsers() {
+        return new GetUsers(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    public GetUser getUser() {
+        return new GetUser(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    public CreateUser createUser() {
+        return new CreateUser(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    public UpdateUser updateUser() {
+        return new UpdateUser(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    public DeleteUser deleteUser() {
+        return new DeleteUser(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    public GetSpaces getSpaces() {
+        return new GetSpaces(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    public GetSpace getSpace() {
+        return new GetSpace(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    public CreateSpace createSpace() {
+        return new CreateSpace(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    public UpdateSpace updateSpace() {
+        return new UpdateSpace(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    public DeleteSpace deleteSpace() {
+        return new DeleteSpace(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    public GetMemberships getMemberships() {
+        return new GetMemberships(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    public GetMembers getMembers() {
+        return new GetMembers(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    public Memberships memberships() {
+        return new Memberships(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    public Members members() {
+        return new Members(this, this.telemetryManager, this.retrofitManager);
     }
 
     // public methods
