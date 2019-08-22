@@ -149,6 +149,28 @@ public class TelemetryManager {
             case PNSignalOperation:
                 endpoint = "sig";
                 break;
+            case PNCreateUserOperation:
+            case PNGetUserOperation:
+            case PNGetUsersOperation:
+            case PNUpdateUserOperation:
+            case PNDeleteUserOperation:
+                endpoint = "usr";
+                break;
+            case PNCreateSpaceOperation:
+            case PNGetSpaceOperation:
+            case PNGetSpacesOperation:
+            case PNUpdateSpaceOperation:
+            case PNDeleteSpaceOperation:
+                endpoint = "spc";
+                break;
+            case PNGetMembers:
+            case PNGetMemberships:
+                endpoint = "mem";
+                break;
+            case PNMembers:
+            case PNMemberships:
+                endpoint = "mem";
+                break;
             default:
                 endpoint = "time";
                 break;
