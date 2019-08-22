@@ -357,8 +357,9 @@ public abstract class Endpoint<Input, Output> {
     }
 
     protected <T extends Endpoint<Input, Output>> T appendInclusionParams(Map<String, String> map, Enum... params) {
-        if (params.length == 0)
+        if (params.length == 0) {
             return (T) this;
+        }
         List<String> list = new ArrayList<>();
         for (Enum param : params) {
             list.add(param.toString());
@@ -368,12 +369,12 @@ public abstract class Endpoint<Input, Output> {
     }
 
     protected <T extends Endpoint<Input, Output>> T appendLimitParam(Map<String, String> map, Integer limit) {
-        int MAX_LIMIT = 100;
+        final int maxLimit = 100;
 
-        if (limit != null && limit > 0 && limit <= MAX_LIMIT) {
+        if (limit != null && limit > 0 && limit <= maxLimit) {
             map.put("limit", String.valueOf(limit));
         } else {
-            map.put("limit", String.valueOf(MAX_LIMIT));
+            map.put("limit", String.valueOf(maxLimit));
         }
         map.put("limit", String.valueOf(limit));
         return (T) this;

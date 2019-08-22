@@ -1,8 +1,8 @@
 package com.pubnub.api.services;
 
 
-import com.pubnub.api.endpoints.objects_api.memberships.PNMember;
-import com.pubnub.api.endpoints.objects_api.memberships.PNMembership;
+import com.pubnub.api.models.consumer.objects_api.membership.PNMember;
+import com.pubnub.api.models.consumer.objects_api.membership.PNMembership;
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope;
 import retrofit2.Call;
 import retrofit2.http.Body;

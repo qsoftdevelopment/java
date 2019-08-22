@@ -1,7 +1,7 @@
 package com.pubnub.api.services;
 
 import com.google.gson.JsonElement;
-import com.pubnub.api.endpoints.objects_api.spaces.PNSpace;
+import com.pubnub.api.models.consumer.objects_api.space.PNSpace;
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope;
 import com.pubnub.api.models.server.objects_api.EntityEnvelope;
 import retrofit2.Call;
