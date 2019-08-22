@@ -356,6 +356,29 @@ public abstract class Endpoint<Input, Output> {
         return encodedParams;
     }
 
+    protected <T extends Endpoint<Input, Output>> T appendInclusionParams(Map<String, String> map, Enum... params) {
+        if (params.length == 0)
+            return (T) this;
+        List<String> list = new ArrayList<>();
+        for (Enum param : params) {
+            list.add(param.toString());
+        }
+        map.put("include", PubNubUtil.joinString(list, ","));
+        return (T) this;
+    }
+
+    protected <T extends Endpoint<Input, Output>> T appendLimitParam(Map<String, String> map, Integer limit) {
+        int MAX_LIMIT = 100;
+
+        if (limit != null && limit > 0 && limit <= MAX_LIMIT) {
+            map.put("limit", String.valueOf(limit));
+        } else {
+            map.put("limit", String.valueOf(MAX_LIMIT));
+        }
+        map.put("limit", String.valueOf(limit));
+        return (T) this;
+    }
+
     protected abstract List<String> getAffectedChannels();
 
     protected abstract List<String> getAffectedChannelGroups();
