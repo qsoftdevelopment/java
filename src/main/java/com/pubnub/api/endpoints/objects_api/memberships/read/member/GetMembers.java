@@ -1,4 +1,4 @@
-package com.pubnub.api.endpoints.objects_api.spaces.read;
+package com.pubnub.api.endpoints.objects_api.memberships.read.member;
 
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
@@ -6,12 +6,13 @@ import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.endpoints.objects_api.InclusionParamsProvider;
 import com.pubnub.api.endpoints.objects_api.ListingParamsProvider;
-import com.pubnub.api.endpoints.objects_api.enums.PNSpaceFields;
-import com.pubnub.api.endpoints.objects_api.spaces.PNSpace;
+import com.pubnub.api.endpoints.objects_api.enums.PNMemberFields;
+import com.pubnub.api.endpoints.objects_api.memberships.PNMember;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -20,14 +21,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Get the inclusionParamList of members in a space
+ */
 @Accessors(chain = true, fluent = true)
-public class GetSpaces extends Endpoint<EntityArrayEnvelope<PNSpace>, PNGetSpacesResult> implements
-        InclusionParamsProvider<GetSpaces, PNSpaceFields>,
-        ListingParamsProvider<GetSpaces> {
+public class GetMembers extends Endpoint<EntityArrayEnvelope<PNMember>, PNGetMembersResult> implements
+        InclusionParamsProvider<GetMembers, PNMemberFields>,
+        ListingParamsProvider<GetMembers> {
 
     private Map<String, String> extraParamsMap;
 
-    public GetSpaces(PubNub pubnubInstance, TelemetryManager telemetry, RetrofitManager retrofitInstance) {
+    @Setter
+    private String spaceId;
+
+    public GetMembers(PubNub pubnubInstance, TelemetryManager telemetry, RetrofitManager retrofitInstance) {
         super(pubnubInstance, telemetry, retrofitInstance);
         extraParamsMap = new HashMap<>();
     }
@@ -48,31 +55,35 @@ public class GetSpaces extends Endpoint<EntityArrayEnvelope<PNSpace>, PNGetSpace
                 || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
+
+        if (this.spaceId == null || this.spaceId.isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SPACE_ID_MISSING).build();
+        }
     }
 
     @Override
-    protected Call<EntityArrayEnvelope<PNSpace>> doWork(Map<String, String> params) {
+    protected Call<EntityArrayEnvelope<PNMember>> doWork(Map<String, String> params) {
 
         params.putAll(extraParamsMap);
 
         params.putAll(encodeParams(params));
 
         return this.getRetrofit()
-                .getSpaceService()
-                .getSpaces(this.getPubnub().getConfiguration().getSubscribeKey(), params);
+                .getMembershipService()
+                .getMembers(this.getPubnub().getConfiguration().getSubscribeKey(), spaceId, params);
     }
 
     @Override
-    protected PNGetSpacesResult createResponse(Response<EntityArrayEnvelope<PNSpace>> input) throws PubNubException {
+    protected PNGetMembersResult createResponse(Response<EntityArrayEnvelope<PNMember>> input) {
         if (input.body() != null) {
-            return PNGetSpacesResult.create(input.body());
+            return PNGetMembersResult.create(input.body());
         }
-        return PNGetSpacesResult.create();
+        return PNGetMembersResult.create();
     }
 
     @Override
     protected PNOperationType getOperationType() {
-        return PNOperationType.PNGetSpacesOperation;
+        return PNOperationType.PNGetMembers;
     }
 
     @Override
@@ -81,29 +92,29 @@ public class GetSpaces extends Endpoint<EntityArrayEnvelope<PNSpace>, PNGetSpace
     }
 
     @Override
-    public GetSpaces includeFields(PNSpaceFields... params) {
+    public GetMembers includeFields(PNMemberFields... params) {
         return appendInclusionParams(extraParamsMap, params);
     }
 
     @Override
-    public GetSpaces limit(Integer limit) {
+    public GetMembers limit(Integer limit) {
         return appendLimitParam(extraParamsMap, limit);
     }
 
     @Override
-    public GetSpaces start(String start) {
+    public GetMembers start(String start) {
         extraParamsMap.put("start", start);
         return this;
     }
 
     @Override
-    public GetSpaces end(String end) {
+    public GetMembers end(String end) {
         extraParamsMap.put("end", end);
         return this;
     }
 
     @Override
-    public GetSpaces withTotalCount(Boolean count) {
+    public GetMembers withTotalCount(Boolean count) {
         extraParamsMap.put("count", String.valueOf(count));
         return this;
     }

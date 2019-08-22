@@ -19,8 +19,8 @@ import java.util.Map;
 public interface SpaceService {
 
     @GET("v1/objects/{subKey}/spaces")
-    Call<EntityArrayEnvelope<PNSpace>> getAllSpaces(@Path("subKey") String subKey,
-                                                    @QueryMap(encoded = true) Map<String, String> options);
+    Call<EntityArrayEnvelope<PNSpace>> getSpaces(@Path("subKey") String subKey,
+                                                 @QueryMap(encoded = true) Map<String, String> options);
 
     @GET("v1/objects/{subKey}/spaces/{spaceId}")
     Call<EntityEnvelope<PNSpace>> getSpace(@Path("subKey") String subKey,
