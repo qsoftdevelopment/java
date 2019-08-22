@@ -71,6 +71,10 @@ checkstyle {
     //configFile = new File(rootDir, "config/checkstyle/checkstyle.xml")
 }
 
+findbugs {
+    excludeFilter = rootProject.file("config/findbugs/excludeFilter.xml")
+}
+
 tasks.withType(Checkstyle) {
     exclude '**/vendor/**', '**/*Test*'
 
