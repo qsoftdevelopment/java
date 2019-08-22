@@ -44,7 +44,12 @@ public class RetrofitManager {
     private SubscribeService subscribeService;
     @Getter
     private SignalService signalService;
-
+    @Getter
+    private UserService userService;
+    @Getter
+    private SpaceService spaceService;
+    @Getter
+    private MembershipService membershipService;
 
     @Getter
     private Retrofit transactionInstance;
