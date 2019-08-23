@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class PNGetSpacesResult extends EntityArrayEnvelope<PNSpace> {
 
-    static PNGetSpacesResult create(EntityArrayEnvelope<PNSpace> envelope) {
+    public static PNGetSpacesResult create(EntityArrayEnvelope<PNSpace> envelope) {
         PNGetSpacesResult result = new PNGetSpacesResult();
         result.totalCount = envelope.getTotalCount();
         result.next = envelope.getNext();
@@ -16,7 +16,7 @@ public class PNGetSpacesResult extends EntityArrayEnvelope<PNSpace> {
         return result;
     }
 
-    static PNGetSpacesResult create() {
+    public static PNGetSpacesResult create() {
         return new PNGetSpacesResult();
     }
 }

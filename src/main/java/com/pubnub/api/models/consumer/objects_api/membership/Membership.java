@@ -1,5 +1,7 @@
 package com.pubnub.api.models.consumer.objects_api.membership;
 
+import com.pubnub.api.models.consumer.objects_api.PropertyEnvelope;
+
 public class Membership extends PropertyEnvelope<Membership> {
 
     private Membership() {

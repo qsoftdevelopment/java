@@ -1,4 +1,4 @@
-package com.pubnub.api.endpoints.objects_api.memberships;
+package com.pubnub.api.endpoints.objects_api.members;
 
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
@@ -10,8 +10,8 @@ import com.pubnub.api.enums.PNMemberFields;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
-import com.pubnub.api.models.consumer.objects_api.membership.PNGetMembersResult;
-import com.pubnub.api.models.consumer.objects_api.membership.PNMember;
+import com.pubnub.api.models.consumer.objects_api.member.PNGetMembersResult;
+import com.pubnub.api.models.consumer.objects_api.member.PNMember;
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -70,7 +70,7 @@ public class GetMembers extends Endpoint<EntityArrayEnvelope<PNMember>, PNGetMem
         params.putAll(encodeParams(params));
 
         return this.getRetrofit()
-                .getMembershipService()
+                .getMemberService()
                 .getMembers(this.getPubnub().getConfiguration().getSubscribeKey(), spaceId, params);
     }
 

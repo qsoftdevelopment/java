@@ -17,9 +17,9 @@ import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup;
-import com.pubnub.api.endpoints.objects_api.memberships.Members;
-import com.pubnub.api.endpoints.objects_api.memberships.Memberships;
-import com.pubnub.api.endpoints.objects_api.memberships.GetMembers;
+import com.pubnub.api.endpoints.objects_api.members.ManageMembers;
+import com.pubnub.api.endpoints.objects_api.memberships.ManageMemberships;
+import com.pubnub.api.endpoints.objects_api.members.GetMembers;
 import com.pubnub.api.endpoints.objects_api.memberships.GetMemberships;
 import com.pubnub.api.endpoints.objects_api.spaces.CreateSpace;
 import com.pubnub.api.endpoints.objects_api.spaces.DeleteSpace;
@@ -257,12 +257,12 @@ public class PubNub {
         return new GetMembers(this, this.telemetryManager, this.retrofitManager);
     }
 
-    public Memberships memberships() {
-        return new Memberships(this, this.telemetryManager, this.retrofitManager);
+    public ManageMemberships manageMemberships() {
+        return new ManageMemberships(this, this.telemetryManager, this.retrofitManager);
     }
 
-    public Members members() {
-        return new Members(this, this.telemetryManager, this.retrofitManager);
+    public ManageMembers manageMembers() {
+        return new ManageMembers(this, this.telemetryManager, this.retrofitManager);
     }
 
     // public methods

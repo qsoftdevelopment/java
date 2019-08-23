@@ -1,4 +1,4 @@
-package com.pubnub.api.models.consumer.objects_api.membership;
+package com.pubnub.api.models.consumer.objects_api;
 
 import java.util.ArrayList;
 import java.util.Arrays;

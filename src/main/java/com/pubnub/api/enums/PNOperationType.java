@@ -50,9 +50,11 @@ public enum PNOperationType {
     PNUpdateSpaceOperation,
     PNDeleteSpaceOperation,
 
-    // Memberships
+    // Members
     PNGetMembers,
+    PNManageMembers,
+
+    // Memberships
     PNGetMemberships,
-    PNMembers,
-    PNMemberships
+    PNManageMemberships
 }

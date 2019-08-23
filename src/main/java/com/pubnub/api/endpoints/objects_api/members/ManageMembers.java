@@ -1,19 +1,19 @@
-package com.pubnub.api.endpoints.objects_api.memberships;
+package com.pubnub.api.endpoints.objects_api.members;
 
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
-import com.pubnub.api.models.consumer.objects_api.util.InclusionParamsProvider;
-import com.pubnub.api.models.consumer.objects_api.util.ListingParamsProvider;
 import com.pubnub.api.enums.PNMemberFields;
-import com.pubnub.api.models.consumer.objects_api.membership.PNPatchPayload;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
-import com.pubnub.api.models.consumer.objects_api.membership.Member;
-import com.pubnub.api.models.consumer.objects_api.membership.PNMember;
-import com.pubnub.api.models.consumer.objects_api.membership.PNMembersResult;
+import com.pubnub.api.models.consumer.objects_api.PNPatchPayload;
+import com.pubnub.api.models.consumer.objects_api.member.Member;
+import com.pubnub.api.models.consumer.objects_api.member.PNManageMembersResult;
+import com.pubnub.api.models.consumer.objects_api.member.PNMember;
+import com.pubnub.api.models.consumer.objects_api.util.InclusionParamsProvider;
+import com.pubnub.api.models.consumer.objects_api.util.ListingParamsProvider;
 import com.pubnub.api.models.consumer.objects_api.util.MembershipChainProvider;
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope;
 import lombok.Setter;
@@ -26,10 +26,10 @@ import java.util.List;
 import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
-public class Members extends Endpoint<EntityArrayEnvelope<PNMember>, PNMembersResult> implements
-        InclusionParamsProvider<Members, PNMemberFields>,
-        ListingParamsProvider<Members>,
-        MembershipChainProvider<Members, Member> {
+public class ManageMembers extends Endpoint<EntityArrayEnvelope<PNMember>, PNManageMembersResult> implements
+        InclusionParamsProvider<ManageMembers, PNMemberFields>,
+        ListingParamsProvider<ManageMembers>,
+        MembershipChainProvider<ManageMembers, Member> {
 
     private Map<String, String> extraParamsMap;
     private PNPatchPayload<Member> pnPatchPayload;
@@ -37,7 +37,7 @@ public class Members extends Endpoint<EntityArrayEnvelope<PNMember>, PNMembersRe
     @Setter
     private String spaceId;
 
-    public Members(PubNub pubnubInstance, TelemetryManager telemetry, RetrofitManager retrofitInstance) {
+    public ManageMembers(PubNub pubnubInstance, TelemetryManager telemetry, RetrofitManager retrofitInstance) {
         super(pubnubInstance, telemetry, retrofitInstance);
         extraParamsMap = new HashMap<>();
         pnPatchPayload = new PNPatchPayload<>();
@@ -73,21 +73,21 @@ public class Members extends Endpoint<EntityArrayEnvelope<PNMember>, PNMembersRe
         params.putAll(encodeParams(params));
 
         return this.getRetrofit()
-                .getMembershipService()
-                .members(this.getPubnub().getConfiguration().getSubscribeKey(), spaceId, pnPatchPayload, params);
+                .getMemberService()
+                .manageMembers(this.getPubnub().getConfiguration().getSubscribeKey(), spaceId, pnPatchPayload, params);
     }
 
     @Override
-    protected PNMembersResult createResponse(Response<EntityArrayEnvelope<PNMember>> input) throws PubNubException {
+    protected PNManageMembersResult createResponse(Response<EntityArrayEnvelope<PNMember>> input) throws PubNubException {
         if (input.body() != null) {
-            return PNMembersResult.create(input.body());
+            return PNManageMembersResult.create(input.body());
         }
-        return PNMembersResult.create();
+        return PNManageMembersResult.create();
     }
 
     @Override
     protected PNOperationType getOperationType() {
-        return PNOperationType.PNMembers;
+        return PNOperationType.PNManageMembers;
     }
 
     @Override
@@ -96,47 +96,47 @@ public class Members extends Endpoint<EntityArrayEnvelope<PNMember>, PNMembersRe
     }
 
     @Override
-    public Members includeFields(PNMemberFields... params) {
+    public ManageMembers includeFields(PNMemberFields... params) {
         return appendInclusionParams(extraParamsMap, params);
     }
 
     @Override
-    public Members limit(Integer limit) {
+    public ManageMembers limit(Integer limit) {
         return appendLimitParam(extraParamsMap, limit);
     }
 
     @Override
-    public Members start(String start) {
+    public ManageMembers start(String start) {
         extraParamsMap.put("start", start);
         return this;
     }
 
     @Override
-    public Members end(String end) {
+    public ManageMembers end(String end) {
         extraParamsMap.put("end", end);
         return this;
     }
 
     @Override
-    public Members withTotalCount(Boolean count) {
+    public ManageMembers withTotalCount(Boolean count) {
         extraParamsMap.put("count", String.valueOf(count));
         return this;
     }
 
     @Override
-    public Members add(Member... list) {
+    public ManageMembers add(Member... list) {
         pnPatchPayload.setAdd(list);
         return this;
     }
 
     @Override
-    public Members update(Member... list) {
+    public ManageMembers update(Member... list) {
         pnPatchPayload.setUpdate(list);
         return this;
     }
 
     @Override
-    public Members remove(Member... list) {
+    public ManageMembers remove(Member... list) {
         pnPatchPayload.setRemove(list);
         return this;
     }

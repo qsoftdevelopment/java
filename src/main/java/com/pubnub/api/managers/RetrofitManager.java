@@ -9,6 +9,7 @@ import com.pubnub.api.interceptors.SignatureInterceptor;
 import com.pubnub.api.services.AccessManagerService;
 import com.pubnub.api.services.ChannelGroupService;
 import com.pubnub.api.services.HistoryService;
+import com.pubnub.api.services.MemberService;
 import com.pubnub.api.services.MembershipService;
 import com.pubnub.api.services.PresenceService;
 import com.pubnub.api.services.PublishService;
@@ -61,6 +62,8 @@ public class RetrofitManager {
     private SpaceService spaceService;
     @Getter
     private MembershipService membershipService;
+    @Getter
+    private MemberService memberService;
 
     @Getter
     private Retrofit transactionInstance;
@@ -99,6 +102,7 @@ public class RetrofitManager {
         this.userService = transactionInstance.create(UserService.class);
         this.spaceService = transactionInstance.create(SpaceService.class);
         this.membershipService = transactionInstance.create(MembershipService.class);
+        this.memberService = transactionInstance.create(MemberService.class);
     }
 
     private OkHttpClient createOkHttpClient(int requestTimeout, int connectTimeOut) {

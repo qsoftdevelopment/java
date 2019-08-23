@@ -1,7 +1,7 @@
 package com.pubnub.api.models.consumer.objects_api.util;
 
 import com.pubnub.api.endpoints.Endpoint;
-import com.pubnub.api.models.consumer.objects_api.membership.PropertyEnvelope;
+import com.pubnub.api.models.consumer.objects_api.PropertyEnvelope;
 
 public interface MembershipChainProvider<PubNubEndpoint extends Endpoint, PropertyType extends PropertyEnvelope> {
 

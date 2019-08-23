@@ -1,4 +1,4 @@
-package com.pubnub.api.models.consumer.objects_api.membership;
+package com.pubnub.api.models.consumer.objects_api.member;
 
 import com.pubnub.api.models.consumer.objects_api.PNObject;
 import com.pubnub.api.models.consumer.objects_api.user.PNUser;
