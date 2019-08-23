@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FindBugsFilter>
     <Match>
-        <Class name="com.pubnub.api.endpoints.objects_api.memberships.PNMember"/>
+        <Class name="com.pubnub.api.models.consumer.objects_api.member.PNMember"/>
         <Field name="user"/>
         <Bug pattern="UWF_UNWRITTEN_FIELD"/>
     </Match>
     <Match>
-        <Class name="com.pubnub.api.endpoints.objects_api.memberships.PNMembership"/>
+        <Class name="com.pubnub.api.models.consumer.objects_api.membership.PNMembership"/>
         <Field name="space"/>
         <Bug pattern="UWF_UNWRITTEN_FIELD"/>
     </Match>
@@ -26,7 +26,7 @@
         <Bug pattern="UWF_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD"/>
     </Match>
     <Match>
-        <Class name="com.pubnub.api.models.consumer.objects_api.membership.PropertyEnvelope"/>
+        <Class name="com.pubnub.api.models.consumer.objects_api.PropertyEnvelope"/>
         <Field name="id"/>
         <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
     </Match>
