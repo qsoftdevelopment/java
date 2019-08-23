@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter(AccessLevel.PACKAGE)
 public class PNGetUsersResult extends EntityArrayEnvelope<PNUser> {
 
-    static PNGetUsersResult create(EntityArrayEnvelope<PNUser> envelope) {
+    public static PNGetUsersResult create(EntityArrayEnvelope<PNUser> envelope) {
         PNGetUsersResult result = new PNGetUsersResult();
         result.totalCount = envelope.getTotalCount();
         result.next = envelope.getNext();
@@ -18,7 +18,7 @@ public class PNGetUsersResult extends EntityArrayEnvelope<PNUser> {
         return result;
     }
 
-    static PNGetUsersResult create() {
+    public static PNGetUsersResult create() {
         return new PNGetUsersResult();
     }
 }

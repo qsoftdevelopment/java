@@ -2,7 +2,13 @@ package com.pubnub.api.managers;
 
 import com.pubnub.api.enums.PNOperationType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class TelemetryManager {
 
@@ -164,12 +170,12 @@ public class TelemetryManager {
                 endpoint = "spc";
                 break;
             case PNGetMembers:
-            case PNGetMemberships:
-                endpoint = "mem";
+            case PNManageMembers:
+                endpoint = "mmb";
                 break;
-            case PNMembers:
-            case PNMemberships:
-                endpoint = "mem";
+            case PNGetMemberships:
+            case PNManageMemberships:
+                endpoint = "msh";
                 break;
             default:
                 endpoint = "time";
