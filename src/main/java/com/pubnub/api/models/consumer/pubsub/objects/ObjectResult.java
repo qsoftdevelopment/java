@@ -16,9 +16,5 @@ class ObjectResult<T> extends BasePubSubResult {
         this.event = event;
         this.data = data;
     }
-
-    public String print() {
-        return (event + " " + data.getClass().getSimpleName());
-    }
 }
 
