@@ -1,12 +1,17 @@
 name: java
-version: 4.26.1
+version: 4.27.0
 schema: 1
 scm: github.com/pubnub/java
 files:
-  - build/libs/pubnub-gson-4.26.1-all.jar
+  - build/libs/pubnub-gson-4.27.0-all.jar
 changelog:
+  - version: v4.27.0
+    date: 2019-08-27
+    changes:
+      - type: feature
+        text: Add Objects API support
   - version: v4.26.1
-    date:  2019-08-13
+    date: 2019-08-13
     changes:
       - type: feature
         text: Introduce serialization class for Signals API
@@ -420,8 +425,32 @@ features:
     - SUBSCRIBE-FILTER-EXPRESSION
     - SUBSCRIBE-PUBLISHER-UUID
     - SUBSCRIBE-SIGNAL-LISTENER
+    - SUBSCRIBE-MEMBERSHIP-LISTENER
+    - SUBSCRIBE-SPACE-LISTENER
+    - SUBSCRIBE-USER-LISTENER
   signal:
     - SIGNAL-SEND
+  objects:
+    - OBJECTS-GET-USERS
+    - OBJECTS-GET-USER
+    - OBJECTS-CREATE-USER
+    - OBJECTS-UPDATE-USER
+    - OBJECTS-DELETE-USER
+    - OBJECTS-GET-SPACES
+    - OBJECTS-CREATE-SPACE
+    - OBJECTS-GET-SPACE
+    - OBJECTS-UPDATE-SPACE
+    - OBJECTS-DELETE-SPACE
+    - OBJECTS-GET-MEMBERSHIPS
+    - OBJECTS-MANAGE-MEMBERSHIPS
+    - OBJECTS-GET-MEMBERS
+    - OBJECTS-MANAGE-MEMBERS
+    - OBJECTS-JOIN-SPACES
+    - OBJECTS-UPDATE-MEMBERSHIPS
+    - OBJECTS-LEAVE-SPACES
+    - OBJECTS-ADD-MEMBERS
+    - OBJECTS-REMOVE-MEMBERS
+    - OBJECTS-UPDATE-MEMBERS
 supported-platforms:
   - version: PubNub Java SDK
     platforms:
