@@ -160,22 +160,22 @@ public class TelemetryManager {
             case PNGetUsersOperation:
             case PNUpdateUserOperation:
             case PNDeleteUserOperation:
-                endpoint = "usr";
+                endpoint = "obj";
                 break;
             case PNCreateSpaceOperation:
             case PNGetSpaceOperation:
             case PNGetSpacesOperation:
             case PNUpdateSpaceOperation:
             case PNDeleteSpaceOperation:
-                endpoint = "spc";
+                endpoint = "obj";
                 break;
             case PNGetMembers:
             case PNManageMembers:
-                endpoint = "mmb";
+                endpoint = "obj";
                 break;
             case PNGetMemberships:
             case PNManageMemberships:
-                endpoint = "msh";
+                endpoint = "obj";
                 break;
             default:
                 endpoint = "time";
