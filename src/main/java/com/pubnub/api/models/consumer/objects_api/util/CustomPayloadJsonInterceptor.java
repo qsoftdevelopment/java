@@ -1,5 +1,6 @@
 package com.pubnub.api.models.consumer.objects_api.util;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -14,11 +15,11 @@ public class CustomPayloadJsonInterceptor implements JsonDeserializer<Object>, J
 
     @Override
     public Object deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        return json.toString();
+        return json;
     }
 
     @Override
     public JsonElement serialize(Object o, Type type, JsonSerializationContext jsonSerializationContext) {
-        return new JsonParser().parse(o.toString());
+        return new JsonParser().parse(new Gson().toJson(o));
     }
 }
