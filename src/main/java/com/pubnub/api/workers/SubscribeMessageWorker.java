@@ -73,9 +73,17 @@ public class SubscribeMessageWorker implements Runnable {
         }
     }
 
-    private JsonElement processMessage(JsonElement input) {
+    private JsonElement processMessage(SubscribeMessage subscribeMessage) {
+        JsonElement input = subscribeMessage.getPayload();
+
         // if we do not have a crypto key, there is no way to process the node; let's return.
         if (pubnub.getConfiguration().getCipherKey() == null) {
+            return input;
+        }
+
+        // if the message couldn't possibly be encrypted in the first place, there is no way to process the node; let's
+        // return.
+        if (!subscribeMessage.supportsEncryption()) {
             return input;
         }
 
@@ -182,7 +190,7 @@ public class SubscribeMessageWorker implements Runnable {
 
             listenerManager.announce(pnPresenceEventResult);
         } else {
-            JsonElement extractedMessage = processMessage(message.getPayload());
+            JsonElement extractedMessage = processMessage(message);
 
             if (extractedMessage == null) {
                 log.debug("unable to parse payload on #processIncomingMessages");
