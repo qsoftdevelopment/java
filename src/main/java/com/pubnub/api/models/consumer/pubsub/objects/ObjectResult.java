@@ -17,4 +17,3 @@ class ObjectResult<T> extends BasePubSubResult {
         this.data = data;
     }
 }
-
