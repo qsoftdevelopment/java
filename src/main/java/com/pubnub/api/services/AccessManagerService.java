@@ -12,11 +12,11 @@ import java.util.Map;
 
 public interface AccessManagerService {
 
-    @GET("/v1/auth/grant/sub-key/{subKey}")
+    @GET("/v2/auth/grant/sub-key/{subKey}")
     Call<Envelope<AccessManagerGrantPayload>> grant(@Path("subKey") String subKey,
                                                     @QueryMap Map<String, String> options);
 
-    @GET("/v1/auth/audit/sub-key/{subKey}")
+    @GET("/v2/auth/audit/sub-key/{subKey}")
     Call<Envelope<AccessManagerAuditPayload>> audit(@Path("subKey") String subKey,
                                                     @QueryMap Map<String, String> options);
 
