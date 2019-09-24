@@ -24,7 +24,14 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.findAll;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.matching;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.assertEquals;
 
@@ -54,7 +61,7 @@ public class GrantEndpointTest extends TestHarness {
     @Test
     public void noGroupsOneChannelOneKeyTest() throws PubNubException {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
                 .withQueryParam("auth", matching("key1"))
@@ -79,17 +86,17 @@ public class GrantEndpointTest extends TestHarness {
         assertEquals(1, result.getChannels().get("ch1").size());
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch1").get("key1").getClass());
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("nUZe6LEDe2RGPeh4qoe-IpjAYzBf8RJMtSXI7ktaah8=", signature);
+        assertEquals("v2.P28cNou37m624BETKNaGaXO_wFR6zVNdBCGD0gQaIu0", signature);
 
     }
 
     @Test
     public void noGroupsOneChannelTwoKeyTest() throws PubNubException {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
                 .withQueryParam("auth", matching("key1,key2"))
@@ -115,16 +122,16 @@ public class GrantEndpointTest extends TestHarness {
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch1").get("key1").getClass());
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch1").get("key2").getClass());
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("ml__GSdczD-5CLqz8Vappaux1bZj6IycOP4O6FyS7ek=", signature);
+        assertEquals("v2.Ss1ofBQ-7z-hKl2HaVHej-ydULIaHnFIH0h_Bn9e4Kc", signature);
     }
 
     @Test
     public void noGroupsTwoChannelOneKeyTest() throws PubNubException {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1,ch2"))
                 .withQueryParam("auth", matching("key1"))
@@ -152,16 +159,16 @@ public class GrantEndpointTest extends TestHarness {
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch1").get("key1").getClass());
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch2").get("key1").getClass());
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("J6g30_aZUtbXOLCQ3kkYx0-K6Rm0F-pFUPa3kZ2647Q=", signature);
+        assertEquals("v2.Wpcc3ml7UhjLbN2moWk4i5BQo67rildSu3UlBh1Pfhs", signature);
     }
 
     @Test
     public void noGroupsTwoChannelTwoKeyTest() throws PubNubException {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1,ch2"))
                 .withQueryParam("auth", matching("key1,key2"))
@@ -191,16 +198,16 @@ public class GrantEndpointTest extends TestHarness {
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch1").get("key2").getClass());
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch2").get("key2").getClass());
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("-3DlrA39lnyhbjTtuJC6s13Gc5Owa_SdRxAx3zJFUd4=", signature);
+        assertEquals("v2.jckwpr_Z9bxT_O6x_ujjjOT-HnOuy3uZ1mFq4uwLYOo", signature);
     }
 
     @Test
     public void oneGroupNoChannelOneKey() throws PubNubException {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel-group", matching("cg1"))
                 .withQueryParam("auth", matching("key1"))
@@ -226,16 +233,16 @@ public class GrantEndpointTest extends TestHarness {
         assertEquals(1, result.getChannelGroups().get("cg1").size());
         assertEquals(PNAccessManagerKeyData.class, result.getChannelGroups().get("cg1").get("key1").getClass());
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("JfuIHr4BMGVbaAVp1QdDvvhcX2aaCEqINIcIsHJMGCs=", signature);
+        assertEquals("v2.88Y8CqE00Tb1yHZPKcMU7lJ_bzfWagyNyFOO5_c-vFM", signature);
     }
 
     @Test
     public void oneGroupNoChannelTwoKey() throws PubNubException {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel-group", matching("cg1"))
                 .withQueryParam("auth", matching("key1,key2"))
@@ -262,16 +269,16 @@ public class GrantEndpointTest extends TestHarness {
         assertEquals(PNAccessManagerKeyData.class, result.getChannelGroups().get("cg1").get("key1").getClass());
         assertEquals(PNAccessManagerKeyData.class, result.getChannelGroups().get("cg1").get("key2").getClass());
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("m47WC6N_zx9EhnX3XcO-bNS0wO5Fw4sj8154NoyyVKs=", signature);
+        assertEquals("v2.kniTaQoagKu4Tb0ZJlw0nwakF2ykpcUnW9WJHC4xHiQ", signature);
     }
 
     @Test
     public void oneGroupOneChannelOneKey() throws PubNubException {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
                 .withQueryParam("channel-group", matching("cg1"))
@@ -301,16 +308,16 @@ public class GrantEndpointTest extends TestHarness {
         assertEquals(1, result.getChannels().get("ch1").size());
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch1").get("key1").getClass());
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("TXuXp8mvpziVIeuyd8b0dgNXRYEJ9oBIhktnhilt7Xs=", signature);
+        assertEquals("v2.asHNzyDdDQcOPfdaHrOQnAoSvQSM1hCYlG2g1CQx4Nk", signature);
     }
 
     @Test
     public void oneGroupOneChannelTwoKey() throws PubNubException {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
                 .withQueryParam("channel-group", matching("cg1"))
@@ -342,17 +349,17 @@ public class GrantEndpointTest extends TestHarness {
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch1").get("key1").getClass());
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch1").get("key2").getClass());
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("KbQ7nkSPXZO_iTfn7nNfCO_Ut7OsEg4Hzb321vGgYUc=", signature);
+        assertEquals("v2.u_NbhezAtxRHm8SKqiTPuCBtg9-_tWYod_HtluUBsf4", signature);
 
     }
 
     @Test
     public void oneGroupTwoChannelOneKey() throws PubNubException {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1,ch2"))
                 .withQueryParam("channel-group", matching("cg1"))
@@ -385,17 +392,17 @@ public class GrantEndpointTest extends TestHarness {
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch1").get("key1").getClass());
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch2").get("key1").getClass());
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("gstN6_LP_z9LVMcBY4nAgXZQu_AcAta6Cuq2nWglbmw=", signature);
+        assertEquals("v2.5Z_LJKrFWMQFVvEvbx6YinUi46rVctdphtIbFGmIKRw", signature);
 
     }
 
     @Test
     public void oneGroupTwoChannelTwoKey() throws PubNubException {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1,ch2"))
                 .withQueryParam("channel-group", matching("cg1"))
@@ -432,17 +439,17 @@ public class GrantEndpointTest extends TestHarness {
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch2").get("key1").getClass());
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch2").get("key2").getClass());
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("p6eQF50jjcKvWQ1rulCE41WHKlJyp11byW989x4FEFc=", signature);
+        assertEquals("v2.LvLC6ilu9P8TkLbfBwB5Hu0e8NVMeErqU9ofp1gXBrc", signature);
     }
 
 
     @Test
     public void twoGroupNoChannelOneKey() throws PubNubException {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel-group", matching("cg1,cg2"))
                 .withQueryParam("auth", matching("key1"))
@@ -471,16 +478,16 @@ public class GrantEndpointTest extends TestHarness {
         assertEquals(PNAccessManagerKeyData.class, result.getChannelGroups().get("cg1").get("key1").getClass());
         assertEquals(PNAccessManagerKeyData.class, result.getChannelGroups().get("cg2").get("key1").getClass());
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("rBRwhq15luvJ5IOFMgQqICHP_K10h0lm1m4TbKTgdWE=", signature);
+        assertEquals("v2.Tahs7UgGWHuzwW1PxQK2NcjgwCjy4sXDlQm481HQ-yU", signature);
     }
 
     @Test
     public void twoGroupNoChannelTwoKey() throws PubNubException {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel-group", matching("cg1,cg2"))
                 .withQueryParam("auth", matching("key1,key2"))
@@ -510,16 +517,16 @@ public class GrantEndpointTest extends TestHarness {
         assertEquals(PNAccessManagerKeyData.class, result.getChannelGroups().get("cg2").get("key1").getClass());
         assertEquals(PNAccessManagerKeyData.class, result.getChannelGroups().get("cg2").get("key2").getClass());
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("_78G4e79CvlnpKJfQTvORBGzimTFZfzxY5tcEVLW4Xs=", signature);
+        assertEquals("v2.FiY3nYIXh3HKND-KYyeqZyCnRlpRziUihVRwVXqccwQ", signature);
     }
 
     @Test
     public void twoGroupOneChannelOneKey() throws PubNubException {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
                 .withQueryParam("channel-group", matching("cg1,cg2"))
@@ -553,16 +560,16 @@ public class GrantEndpointTest extends TestHarness {
         assertEquals(1, result.getChannels().get("ch1").size());
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch1").get("key1").getClass());
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("8y9GXwhZFO1m9saIe1FVkAu5jIPMu-U9eHVSy0ybyio=", signature);
+        assertEquals("v2.c1_JVh0_NlITvkaWqbE3PUuA_3C5K2l1OGQWPCl_CHk", signature);
     }
 
     @Test
     public void twoGroupOneChannelTwoKey() throws PubNubException {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
                 .withQueryParam("channel-group", matching("cg1,cg2"))
@@ -599,16 +606,16 @@ public class GrantEndpointTest extends TestHarness {
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch1").get("key1").getClass());
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch1").get("key2").getClass());
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("GIgfQnwun0NgZNYD_rDtS3DkIuK7xMyWN8p_7kG4y5Q=", signature);
+        assertEquals("v2.nezQHDvDPxEJQi7vRvx4MjrDKyqcYnFVAeHnsyrpztM", signature);
     }
 
     @Test
     public void twoGroupTwoChannelOneKey() throws PubNubException {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1,ch2"))
                 .withQueryParam("auth", matching("key1"))
@@ -644,16 +651,16 @@ public class GrantEndpointTest extends TestHarness {
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch1").get("key1").getClass());
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch2").get("key1").getClass());
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("Kvm2uRwgJ60iGYyvI60KC_WIdU3cxIKyYaX1LK0PL3c=", signature);
+        assertEquals("v2.jdOHKaMqeEGxk2hQA26nN_6jbBPn1zD4X-TgpctntUE", signature);
     }
 
     @Test
     public void twoGroupTwoChannelTwoKey() throws PubNubException {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1,ch2"))
                 .withQueryParam("channel-group", matching("cg1,cg2"))
@@ -695,16 +702,16 @@ public class GrantEndpointTest extends TestHarness {
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch2").get("key1").getClass());
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch2").get("key2").getClass());
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("uptOF3nuKzGHSJ-swKQFj4XSgzKetO5uHl9iRkPeYGY=", signature);
+        assertEquals("v2.GmR9QKrFS4ShPcqcuVk0v2VAWOR6Hh-wMNj3O8z3rZw", signature);
     }
 
     @Test
     public void noGroupsOneChannelOneKeyTTLTest() throws PubNubException {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
                 .withQueryParam("auth", matching("key1"))
@@ -730,16 +737,16 @@ public class GrantEndpointTest extends TestHarness {
         assertEquals(1, result.getChannels().get("ch1").size());
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch1").get("key1").getClass());
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("VcJTCcpMugw4Stm409oUeaLWR0-ZewRJNKKetI6A1Jk=", signature);
+        assertEquals("v2.OVYu6lFI47GnlI9OCsWmT7Ywl70cXe1mYobn8kSq3C0", signature);
     }
 
     @Test
     public void noGroupsOneChannelOneReadKeyTest() throws PubNubException {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
                 .withQueryParam("auth", matching("key1"))
@@ -764,16 +771,16 @@ public class GrantEndpointTest extends TestHarness {
         assertEquals(1, result.getChannels().get("ch1").size());
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch1").get("key1").getClass());
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("9ngAxIIhZUq6qqCAPXwcpoqPlSRXDokohXmgZ9jEZsM=", signature);
+        assertEquals("v2.bKZDl82jOTOOSnbLpAZfe1x-0_WZ5tCfNIuq4CWJ-aQ", signature);
     }
 
     @Test
     public void noGroupsOneChannelOneWriteKeyTest() throws PubNubException {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
                 .withQueryParam("auth", matching("key1"))
@@ -798,16 +805,16 @@ public class GrantEndpointTest extends TestHarness {
         assertEquals(1, result.getChannels().get("ch1").size());
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch1").get("key1").getClass());
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("ZNoFdFsoGjNmKLoOFPW7Xn9es3c41ZG1gHZ3Szz9BbA=", signature);
+        assertEquals("v2.2w8okrWhyyHRx7gjdwXeP_kOaWa_sKi1i2E0-Xb2Z6M", signature);
     }
 
     @Test
     public void noGroupsOneChannelOneKeyManageTest() throws PubNubException {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
                 .withQueryParam("auth", matching("key1"))
@@ -832,16 +839,16 @@ public class GrantEndpointTest extends TestHarness {
         assertEquals(1, result.getChannels().get("ch1").size());
         assertEquals(PNAccessManagerKeyData.class, result.getChannels().get("ch1").get("key1").getClass());
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("lMTGADViQb_pQPkwOypoiRhiJGdN2prTlWlHCfZrgx0=", signature);
+        assertEquals("v2.AIdgmbGe8fz44q5ChE1xD39HbiozTLVQX5IBzWt1Lps", signature);
     }
 
     @Test
     public void testIsAuthRequiredSuccessSync() throws PubNubException {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
                 .withQueryParam("auth", matching("key1"))
@@ -860,21 +867,21 @@ public class GrantEndpointTest extends TestHarness {
         pubnub.getConfiguration().setAuthKey("myKey");
         partialGrant.authKeys(Collections.singletonList("key1")).channels(Collections.singletonList("ch1")).sync();
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("nUZe6LEDe2RGPeh4qoe-IpjAYzBf8RJMtSXI7ktaah8=", signature);
+        assertEquals("v2.P28cNou37m624BETKNaGaXO_wFR6zVNdBCGD0gQaIu0", signature);
     }
 
     @Test
     public void testOperationTypeSuccessAsync() throws IOException, PubNubException, InterruptedException {
         AtomicBoolean atomic = new AtomicBoolean(false);
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
                 .withQueryParam("auth", matching("key1"))
-                .withQueryParam("signature", matching("nUZe6LEDe2RGPeh4qoe-IpjAYzBf8RJMtSXI7ktaah8="))
+                .withQueryParam("signature", matching("v2.P28cNou37m624BETKNaGaXO_wFR6zVNdBCGD0gQaIu0"))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
@@ -973,14 +980,14 @@ public class GrantEndpointTest extends TestHarness {
     @Test
     public void testMissingChannelsAndChannelGroup() {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
                 .withQueryParam("m", matching("0"))
-                .withQueryParam("signature", matching("2ChTJop-BoPtTNfZehYicjJinZzOeICMfa0z7oj2x3I="))
+                .withQueryParam("signature", matching("v2.lflPErDXmNvpiFKFZJqVQ1KizNriLz5fCnlXDRuDGzY"))
                 .willReturn(aResponse().withStatus(200).withBody("{\"message\":\"Success\"," +
                         "\"payload\":{\"level\":\"subkey\",\"subscribe_key\":\"mySubscribeKey\",\"ttl\":1440,\"r\":0," +
                         "\"w\":1,\"m\":0,\"d\":0},\"service\":\"Access Manager\",\"status\":200}")));
@@ -1001,7 +1008,7 @@ public class GrantEndpointTest extends TestHarness {
     @Test
     public void testNullPayload() {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
                 .withQueryParam("auth", matching("key1"))
@@ -1025,11 +1032,10 @@ public class GrantEndpointTest extends TestHarness {
 
         AtomicBoolean atomic = new AtomicBoolean(false);
 
-        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
-                //.withQueryParam("signature", matching("HlyfXDFhdgNhKfBzGaouxh2T2SRimm4bVq_JVKLRPQI="))
-                .withQueryParam("signature", matching("uj_YKE1IA08QawOIxbxzcd_lyCk2avtY2R48hIXpWdg="))
+                .withQueryParam("signature", matching("v2.Hnpu6b9ujEibQBUY9bGinmBVxcjl8iqXaPjEBCYT0Mg"))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
@@ -1053,4 +1059,3 @@ public class GrantEndpointTest extends TestHarness {
     }
 
 }
-
