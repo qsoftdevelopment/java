@@ -12,15 +12,16 @@ import com.pubnub.api.endpoints.MessageCounts;
 import com.pubnub.api.endpoints.Time;
 import com.pubnub.api.endpoints.access.Audit;
 import com.pubnub.api.endpoints.access.Grant;
+import com.pubnub.api.endpoints.access.GrantToken;
 import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup;
-import com.pubnub.api.endpoints.objects_api.members.ManageMembers;
-import com.pubnub.api.endpoints.objects_api.memberships.ManageMemberships;
 import com.pubnub.api.endpoints.objects_api.members.GetMembers;
+import com.pubnub.api.endpoints.objects_api.members.ManageMembers;
 import com.pubnub.api.endpoints.objects_api.memberships.GetMemberships;
+import com.pubnub.api.endpoints.objects_api.memberships.ManageMemberships;
 import com.pubnub.api.endpoints.objects_api.spaces.CreateSpace;
 import com.pubnub.api.endpoints.objects_api.spaces.DeleteSpace;
 import com.pubnub.api.endpoints.objects_api.spaces.GetSpace;
@@ -169,8 +170,17 @@ public class PubNub {
         return new Audit(this, this.telemetryManager, this.retrofitManager);
     }
 
+    /**
+     * @deprecated This method will soon be obsoleted.
+     * <p> Use {@link PubNub#grantToken()} instead.
+     */
+    @Deprecated
     public Grant grant() {
         return new Grant(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    public GrantToken grantToken() {
+        return new GrantToken(this, this.telemetryManager, this.retrofitManager);
     }
 
     public GetState getPresenceState() {
