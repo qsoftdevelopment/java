@@ -25,7 +25,7 @@ public class TokenManager {
         initMap();
     }
 
-    private void initMap() {
+    private synchronized void initMap() {
         PNResourceType[] resources = new PNResourceType[]{
                 PNResourceType.CHANNEL,
                 PNResourceType.GROUP,
@@ -143,6 +143,7 @@ public class TokenManager {
                 return PNResourceType.USER.toString();
             case "spc":
                 return PNResourceType.SPACE.toString();
+            default:
         }
         return resourceTypeAbbreviation;
     }
@@ -153,6 +154,7 @@ public class TokenManager {
                 return "res";
             case PATTERN:
                 return "pat";
+            default:
         }
         return pnMatchType.toString();
     }

@@ -345,7 +345,7 @@ public abstract class Endpoint<Input, Output> {
             params.put("auth", pubnub.getConfiguration().getAuthKey());
         }
 
-        if (!this.pubnub.getConfiguration().isDisableTms() && this.pubnub.getConfiguration().getSecretKey() == null) {
+        if (!this.pubnub.getConfiguration().isDisableTokenManager() && this.pubnub.getConfiguration().getSecretKey() == null) {
             if (this instanceof TokenManagerPropertyProvider) {
                 TokenManagerProperties tokenManagerProperties =
                         ((TokenManagerPropertyProvider) this).getTmsProperties();
