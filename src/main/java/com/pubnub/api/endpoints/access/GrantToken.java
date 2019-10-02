@@ -108,7 +108,7 @@ public class GrantToken extends Endpoint<JsonObject, PNGrantTokenResult> {
 
     @Override
     protected PNOperationType getOperationType() {
-        return PNOperationType.PNAccessManagerGranToken;
+        return PNOperationType.PNAccessManagerGrantToken;
     }
 
     @Override
