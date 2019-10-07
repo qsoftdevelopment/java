@@ -1,10 +1,21 @@
 name: java
-version: 4.28.0
+version: 4.29.0
 schema: 1
 scm: github.com/pubnub/java
 files:
-  - build/libs/pubnub-gson-4.28.0-all.jar
+  - build/libs/pubnub-gson-4.29.0-all.jar
 changelog:
+  - version: v4.29.0
+    date: 2019-10-08
+    changes:
+      - type: feature
+        text: Implemented Message Actions API
+      - type: feature
+        text: Added 'includeMeta' to history()
+      - type: feature
+        text: Added 'includeMeta' to fetchMessages()
+      - type: feature
+        text: Added 'includeMessageActions' to fetchMessages()
   - version: v4.28.0
     date: 2019-10-01
     changes:
