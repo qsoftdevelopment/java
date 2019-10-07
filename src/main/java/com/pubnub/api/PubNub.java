@@ -18,6 +18,9 @@ import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup;
+import com.pubnub.api.endpoints.message_actions.AddMessageAction;
+import com.pubnub.api.endpoints.message_actions.GetMessageActions;
+import com.pubnub.api.endpoints.message_actions.RemoveMessageAction;
 import com.pubnub.api.endpoints.objects_api.members.GetMembers;
 import com.pubnub.api.endpoints.objects_api.members.ManageMembers;
 import com.pubnub.api.endpoints.objects_api.memberships.GetMemberships;
@@ -280,6 +283,18 @@ public class PubNub {
 
     public ManageMembers manageMembers() {
         return new ManageMembers(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    public AddMessageAction addMessageAction() {
+        return new AddMessageAction(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    public GetMessageActions getMessageActions() {
+        return new GetMessageActions(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    public RemoveMessageAction removeMessageAction() {
+        return new RemoveMessageAction(this, this.telemetryManager, this.retrofitManager);
     }
 
     // public methods
