@@ -296,6 +296,31 @@ public final class PubNubErrorBuilder {
      */
     public static final int PNERR_INVALID_ACCESS_TOKEN = 157;
 
+    /**
+     * Message action type missing
+     */
+    public static final int PNERR_MESSAGE_ACTION_TYPE_MISSING = 158;
+
+    /**
+     * Message action value missing
+     */
+    public static final int PNERR_MESSAGE_ACTION_VALUE_MISSING = 159;
+
+    /**
+     * Message timetoken missing
+     */
+    public static final int PNERR_MESSAGE_TIMETOKEN_MISSING = 160;
+
+    /**
+     * Message action timetoken missing
+     */
+    public static final int PNERR_MESSAGE_ACTION_TIMETOKEN_MISSING = 161;
+
+    /**
+     * Retrieving message actions for multiple channels
+     */
+    public static final int PNERR_HISTORY_MESSAGE_ACTIONS_MULTIPLE_CHANNELS = 162;
+
     // Error Objects
     public static final PubNubError PNERROBJ_TIMEOUT = PubNubError.builder()
             .errorCode(PNERR_TIMEOUT)
@@ -587,6 +612,32 @@ public final class PubNubErrorBuilder {
     public static final PubNubError PNERROBJ_INVALID_ACCESS_TOKEN = PubNubError.builder()
             .errorCode(PNERR_INVALID_ACCESS_TOKEN)
             .message("Invalid access token")
+            .build();
+
+    public static final PubNubError PNERROBJ_MESSAGE_ACTION_TYPE_MISSING = PubNubError.builder()
+            .errorCode(PNERR_MESSAGE_ACTION_TYPE_MISSING)
+            .message("Message action type is missing")
+            .build();
+
+    public static final PubNubError PNERROBJ_MESSAGE_ACTION_VALUE_MISSING = PubNubError.builder()
+            .errorCode(PNERR_MESSAGE_ACTION_VALUE_MISSING)
+            .message("Message action value is missing")
+            .build();
+
+    public static final PubNubError PNERROBJ_MESSAGE_TIMETOKEN_MISSING = PubNubError.builder()
+            .errorCode(PNERR_MESSAGE_TIMETOKEN_MISSING)
+            .message("Message timetoken is missing")
+            .build();
+
+    public static final PubNubError PNERROBJ_MESSAGE_ACTION_TIMETOKEN_MISSING = PubNubError.builder()
+            .errorCode(PNERR_MESSAGE_ACTION_TIMETOKEN_MISSING)
+            .message("Message action timetoken is missing")
+            .build();
+
+    public static final PubNubError PNERROBJ_HISTORY_MESSAGE_ACTIONS_MULTIPLE_CHANNELS = PubNubError.builder()
+            .errorCode(PNERR_HISTORY_MESSAGE_ACTIONS_MULTIPLE_CHANNELS)
+            .message("History can return message action data for a single channel only. "
+                    .concat("Either pass a single channel or disable the includeMessageActions flag."))
             .build();
 
     private PubNubErrorBuilder() {
