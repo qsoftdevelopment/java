@@ -466,6 +466,10 @@ public class PubNub {
         return tokenManager.getToken(tokenManagerProperties);
     }
 
+    public HashMap<String, HashMap<String, HashMap<String, String>>> getTokens() {
+        return tokenManager.getTokens();
+    }
+
     public HashMap<String, HashMap<String, String>> getTokensByResource(PNResourceType resourceType) {
         return tokenManager.getTokensByResource(resourceType);
     }
