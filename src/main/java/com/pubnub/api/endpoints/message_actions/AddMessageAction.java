@@ -27,13 +27,7 @@ public class AddMessageAction extends Endpoint<EntityEnvelope<PNMessageAction>, 
     private String channel;
 
     @Setter
-    private Long messageTimetoken;
-
-    @Setter
-    private String type;
-
-    @Setter
-    private String value;
+    private PNMessageAction messageAction;
 
     public AddMessageAction(PubNub pubnubInstance, TelemetryManager telemetry, RetrofitManager retrofitInstance) {
         super(pubnubInstance, telemetry, retrofitInstance);
@@ -54,14 +48,17 @@ public class AddMessageAction extends Endpoint<EntityEnvelope<PNMessageAction>, 
         if (channel == null || channel.isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING).build();
         }
-        if (messageTimetoken == null) {
+        if (messageAction == null) {
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_MESSAGE_ACTION_MISSING).build();
+        }
+        if (messageAction.getMessageTimetoken() == null) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_MESSAGE_TIMETOKEN_MISSING).build();
         }
-        if (type == null || type.isEmpty()) {
+        if (messageAction.getType() == null || messageAction.getType().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_MESSAGE_ACTION_TYPE_MISSING)
                     .build();
         }
-        if (value == null || value.isEmpty()) {
+        if (messageAction.getValue() == null || messageAction.getValue().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_MESSAGE_ACTION_VALUE_MISSING)
                     .build();
         }
@@ -76,14 +73,14 @@ public class AddMessageAction extends Endpoint<EntityEnvelope<PNMessageAction>, 
 
         params.putAll(encodeParams(params));
 
-        JsonObject requestBody = new JsonObject();
-        requestBody.addProperty("type", type);
-        requestBody.addProperty("value", value);
+        JsonObject body = new JsonObject();
+        body.addProperty("type", messageAction.getType());
+        body.addProperty("value", messageAction.getValue());
 
         return this.getRetrofit()
                 .getMessageActionService()
                 .addMessageAction(this.getPubnub().getConfiguration().getSubscribeKey(), channel,
-                        Long.toString(messageTimetoken).toLowerCase(), requestBody, params);
+                        Long.toString(messageAction.getMessageTimetoken()).toLowerCase(), body, params);
     }
 
     @Override

@@ -1,21 +1,27 @@
 package com.pubnub.api.models.consumer.message_actions;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 @Getter
 @ToString
+@Accessors(chain = true)
 public class PNMessageAction {
 
+    @Setter
     private String type;
+    @Setter
     private String value;
-    private String uuid;
-    private Long actionTimetoken;
+    @Setter
     private Long messageTimetoken;
 
-    public PNMessageAction(String type, String value) {
-        this.type = type;
-        this.value = value;
+    private String uuid;
+    private Long actionTimetoken;
+
+    public PNMessageAction() {
+
     }
 
     PNMessageAction(PNMessageAction pnMessageAction) {

@@ -145,7 +145,15 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
                 messageItemBuilder.message(processMessage(item.getMessage()));
                 messageItemBuilder.timetoken(item.getTimetoken());
                 messageItemBuilder.meta(item.getMeta());
-                messageItemBuilder.actions(item.getActions());
+
+                if (includeMessageActions) {
+                    if (item.getActions() != null) {
+                        messageItemBuilder.actions(item.getActions());
+                    } else {
+                        messageItemBuilder.actions(new HashMap<>());
+                    }
+                }
+
                 items.add(messageItemBuilder.build());
             }
 
@@ -188,7 +196,7 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
         outputText = crypto.decrypt(inputText);
         outputObject = mapper.fromJson(outputText, JsonElement.class);
 
-        // inject the decoded resposne into the payload
+        // inject the decoded response into the payload
         if (mapper.isJsonObject(message) && mapper.hasField(message, "pn_other")) {
             JsonObject objectNode = mapper.getAsObject(message);
             mapper.putOnObject(objectNode, "pn_other", outputObject);
