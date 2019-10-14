@@ -36,6 +36,7 @@ public class PNStatus {
     private List<String> affectedChannelGroups;
 
     @Getter(AccessLevel.NONE)
+    @ToString.Exclude
     private Endpoint executedEndpoint;
 
 

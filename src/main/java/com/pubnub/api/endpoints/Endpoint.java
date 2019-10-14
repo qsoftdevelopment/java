@@ -232,7 +232,8 @@ public abstract class Endpoint<Input, Output> {
                     return;
                 }
 
-                PNStatusCategory pnStatusCategory = PNStatusCategory.PNBadRequestCategory;
+                PNStatusCategory pnStatusCategory;
+
                 PubNubException.PubNubExceptionBuilder pubnubException = PubNubException.builder()
                         .errormsg(throwable.getMessage());
 
@@ -249,6 +250,11 @@ public abstract class Endpoint<Input, Output> {
                     pnStatusCategory = PNStatusCategory.PNTimeoutCategory;
                 } catch (Throwable throwable1) {
                     pubnubException.pubnubError(PubNubErrorBuilder.PNERROBJ_HTTP_ERROR);
+                    if (performedCall.isCanceled()) {
+                        pnStatusCategory = PNStatusCategory.PNCancelledCategory;
+                    } else {
+                        pnStatusCategory = PNStatusCategory.PNBadRequestCategory;
+                    }
                 }
 
                 callback.onResponse(null,
