@@ -22,7 +22,6 @@ import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
 import org.awaitility.Awaitility;
-import org.awaitility.Duration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -2829,7 +2828,7 @@ public class SubscriptionManagerTest extends TestHarness {
                 .execute();
 
         Awaitility.await()
-                .atMost(Duration.FIVE_SECONDS)
+                .atMost(5, TimeUnit.SECONDS)
                 .until(() -> subscribeSuccess.get() && !heartbeatFail.get());
     }
 
@@ -2914,7 +2913,7 @@ public class SubscriptionManagerTest extends TestHarness {
                 .execute();
 
         Awaitility.await()
-                .atMost(Duration.FIVE_SECONDS)
+                .atMost(5, TimeUnit.SECONDS)
                 .until(() -> subscribeSuccess.get() && heartbeatSuccess.get());
     }
 

@@ -8,6 +8,7 @@ import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Okio;
 import okio.Timeout;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -23,11 +24,13 @@ public class AppEngineFactory implements Call {
         this.pubNub = pubNub;
     }
 
+    @NotNull
     @Override
     public Request request() {
         return request;
     }
 
+    @NotNull
     @Override
     public Response execute() throws IOException {
         request = PubNubUtil.signRequest(request, pubNub.getConfiguration(), pubNub.getTimestamp());
@@ -104,11 +107,13 @@ public class AppEngineFactory implements Call {
         return false;
     }
 
+    @NotNull
     @Override
     public Timeout timeout() {
         return Timeout.NONE;
     }
 
+    @NotNull
     @Override
     public Call clone() {
         try {
@@ -125,6 +130,7 @@ public class AppEngineFactory implements Call {
             this.pubNub = pubNub;
         }
 
+        @NotNull
         @Override
         public Call newCall(Request request) {
             return new AppEngineFactory(request, pubNub);

@@ -11,16 +11,15 @@ import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
+import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
+import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
-import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
-import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
 import okhttp3.HttpUrl;
 import org.awaitility.Awaitility;
-import org.awaitility.Duration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -32,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -86,7 +86,10 @@ public class SignalTest extends TestHarness {
         assertEquals("myUUID", request.queryParameter("uuid").firstValue());
 
         HttpUrl httpUrl = HttpUrl.parse(request.getAbsoluteUrl());
-        String decodedSignalPayload = httpUrl.pathSegments().get(httpUrl.pathSize() - 1);
+        String decodedSignalPayload = null;
+        if (httpUrl != null) {
+            decodedSignalPayload = httpUrl.pathSegments().get(httpUrl.pathSize() - 1);
+        }
         assertEquals(pubNub.getMapper().toJson(payload), decodedSignalPayload);
     }
 
@@ -114,7 +117,7 @@ public class SignalTest extends TestHarness {
                 });
 
         Awaitility.await()
-                .atMost(Duration.FIVE_SECONDS)
+                .atMost(5, TimeUnit.SECONDS)
                 .untilTrue(success);
 
     }
@@ -180,7 +183,7 @@ public class SignalTest extends TestHarness {
 
 
         Awaitility.await()
-                .atMost(Duration.FIVE_SECONDS)
+                .atMost(5, TimeUnit.SECONDS)
                 .untilTrue(success);
     }
 
