@@ -24,6 +24,8 @@ public class TelemetryManager {
 
     private NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
 
+    private static final int MAX_FRACTION_DIGITS = 3;
+
     private static final int TIMESTAMP_DIVIDER = 1000;
 
     private static final double MAXIMUM_LATENCY_DATA_AGE = 60.0f;
@@ -33,7 +35,7 @@ public class TelemetryManager {
     public TelemetryManager() {
         this.latencies = new HashMap<>();
 
-        this.numberFormat.setMaximumFractionDigits(3);
+        this.numberFormat.setMaximumFractionDigits(MAX_FRACTION_DIGITS);
         this.numberFormat.setRoundingMode(RoundingMode.HALF_UP);
         this.numberFormat.setGroupingUsed(false);
 
