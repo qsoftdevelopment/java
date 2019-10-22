@@ -75,7 +75,14 @@ public class AppEngineFactory implements Call {
 
                     @Override
                     public long contentLength() {
-                        return connection.getContentLengthLong();
+                        String contentLengthField = connection.getHeaderField("content-length");
+                        long contentLength;
+                        try {
+                            contentLength = Long.parseLong(contentLengthField);
+                        } catch (NumberFormatException ignored) {
+                            contentLength = -1;
+                        }
+                        return contentLength;
                     }
 
                     @Override
