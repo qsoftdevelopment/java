@@ -21,6 +21,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.java.Log;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -75,7 +78,7 @@ public abstract class Endpoint<Input, Output> {
         this.telemetryManager = telemetry;
     }
 
-
+    @Nullable
     public Output sync() throws PubNubException {
         this.validateParams();
 
@@ -124,7 +127,7 @@ public abstract class Endpoint<Input, Output> {
         return response;
     }
 
-    public void async(final PNCallback<Output> callback) {
+    public void async(@NotNull final PNCallback<Output> callback) {
         cachedCallback = callback;
 
         try {
