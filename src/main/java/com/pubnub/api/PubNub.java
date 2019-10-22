@@ -191,15 +191,7 @@ public class PubNub {
         return new MessageCounts(this, this.telemetryManager, this.retrofitManager);
     }
 
-    public Audit audit() {
-        return new Audit(this, this.telemetryManager, this.retrofitManager);
-    }
-
-    /**
-     * @deprecated This method will soon be obsoleted.
-     * <p> Use {@link PubNub#grantToken()} instead.
-     */
-    @Deprecated
+    @NotNull
     public Grant grant() {
         return new Grant(this, this.telemetryManager, this.retrofitManager);
     }
