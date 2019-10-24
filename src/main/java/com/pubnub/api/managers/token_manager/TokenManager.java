@@ -9,7 +9,6 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.vendor.Base64;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,8 +26,6 @@ public class TokenManager {
 
     private synchronized void initMap() {
         PNResourceType[] resources = new PNResourceType[]{
-                PNResourceType.CHANNEL,
-                PNResourceType.GROUP,
                 PNResourceType.USER,
                 PNResourceType.SPACE
         };
@@ -92,14 +89,14 @@ public class TokenManager {
     }
 
     private JsonObject unwrapToken(String token) throws PubNubException {
-        String raw = token;
-
-        raw = raw.replace("_", "/").replace("-", "+");
-        byte[] byteArray = Base64.decode(raw.getBytes(StandardCharsets.UTF_8), 0);
-
-        CBORFactory f = new CBORFactory();
-        ObjectMapper mapper = new ObjectMapper(f);
         try {
+            String raw = token;
+
+            raw = raw.replace("_", "/").replace("-", "+");
+            byte[] byteArray = Base64.decode(raw.getBytes("UTF-8"), 0);
+
+            CBORFactory f = new CBORFactory();
+            ObjectMapper mapper = new ObjectMapper(f);
             Object o = mapper.readValue(byteArray, Object.class);
             return new JsonParser().parse(new Gson().toJson(o)).getAsJsonObject();
         } catch (IOException e) {
@@ -135,10 +132,6 @@ public class TokenManager {
 
     private String getExtendedResourceType(String resourceTypeAbbreviation) {
         switch (resourceTypeAbbreviation) {
-            case "chan":
-                return PNResourceType.CHANNEL.toString();
-            case "grp":
-                return PNResourceType.GROUP.toString();
             case "usr":
                 return PNResourceType.USER.toString();
             case "spc":
@@ -158,5 +151,4 @@ public class TokenManager {
         }
         return pnMatchType.toString();
     }
-
 }

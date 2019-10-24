@@ -11,15 +11,16 @@ import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.PNStatus;
-import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
-import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
-import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
+import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
+import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
+import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
+import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
 import okhttp3.HttpUrl;
 import org.awaitility.Awaitility;
-import org.awaitility.Duration;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -31,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -85,7 +87,10 @@ public class SignalTest extends TestHarness {
         assertEquals("myUUID", request.queryParameter("uuid").firstValue());
 
         HttpUrl httpUrl = HttpUrl.parse(request.getAbsoluteUrl());
-        String decodedSignalPayload = httpUrl.pathSegments().get(httpUrl.pathSize() - 1);
+        String decodedSignalPayload = null;
+        if (httpUrl != null) {
+            decodedSignalPayload = httpUrl.pathSegments().get(httpUrl.pathSize() - 1);
+        }
         assertEquals(pubNub.getMapper().toJson(payload), decodedSignalPayload);
     }
 
@@ -104,7 +109,7 @@ public class SignalTest extends TestHarness {
                 .message(payload)
                 .async(new PNCallback<PNPublishResult>() {
                     @Override
-                    public void onResponse(PNPublishResult result, PNStatus status) {
+                    public void onResponse(PNPublishResult result, @NotNull PNStatus status) {
                         assertFalse(status.isError());
                         assertEquals(PNOperationType.PNSignalOperation, status.getOperation());
                         assertEquals("1000", result.getTimetoken().toString());
@@ -113,7 +118,7 @@ public class SignalTest extends TestHarness {
                 });
 
         Awaitility.await()
-                .atMost(Duration.FIVE_SECONDS)
+                .atMost(5, TimeUnit.SECONDS)
                 .untilTrue(success);
 
     }
@@ -130,22 +135,22 @@ public class SignalTest extends TestHarness {
 
         pubNub.addListener(new SubscribeCallback() {
             @Override
-            public void status(PubNub pubnub, PNStatus status) {
+            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
 
             }
 
             @Override
-            public void message(PubNub pubnub, PNMessageResult message) {
+            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
                 throw new RuntimeException("Should never receive a message");
             }
 
             @Override
-            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
 
             }
 
             @Override
-            public void signal(PubNub pubnub, PNSignalResult signal) {
+            public void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult signal) {
                 assertEquals("coolChannel", signal.getChannel());
                 assertEquals("hello", signal.getMessage().getAsString());
                 assertEquals("uuid", signal.getPublisher());
@@ -153,17 +158,22 @@ public class SignalTest extends TestHarness {
             }
 
             @Override
-            public void user(PubNub pubnub, PNUserResult pnUserResult) {
+            public void user(@NotNull PubNub pubnub, @NotNull PNUserResult pnUserResult) {
 
             }
 
             @Override
-            public void space(PubNub pubnub, PNSpaceResult pnSpaceResult) {
+            public void space(@NotNull PubNub pubnub, @NotNull PNSpaceResult pnSpaceResult) {
 
             }
 
             @Override
-            public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+            public void membership(@NotNull PubNub pubnub, @NotNull PNMembershipResult pnMembershipResult) {
+
+            }
+
+            @Override
+            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
 
             }
         });
@@ -174,7 +184,7 @@ public class SignalTest extends TestHarness {
 
 
         Awaitility.await()
-                .atMost(Duration.FIVE_SECONDS)
+                .atMost(5, TimeUnit.SECONDS)
                 .untilTrue(success);
     }
 
