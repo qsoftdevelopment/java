@@ -6,7 +6,7 @@ import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;
-import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.callbacks.PNResultCallback;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
@@ -21,6 +21,7 @@ import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResu
 import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
+
 import org.awaitility.Awaitility;
 import org.jetbrains.annotations.NotNull;
 import org.junit.After;
@@ -1315,7 +1316,7 @@ public class SubscriptionManagerTest extends TestHarness {
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).channelGroups(Arrays.asList("cg1", "cg2")).execute();
         pubnub.setPresenceState().channels(Arrays.asList("ch1")).channelGroups(Arrays.asList("cg2"))
                 .state(Arrays.asList("p1", "p2"))
-                .async(new PNCallback<PNSetStateResult>() {
+                .async(new PNResultCallback<PNSetStateResult>() {
                     @Override
                     public void onResponse(PNSetStateResult result, @NotNull PNStatus status) {
                     }

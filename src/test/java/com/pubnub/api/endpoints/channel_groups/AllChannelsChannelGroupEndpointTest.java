@@ -4,11 +4,12 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.callbacks.PNResultCallback;
 import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAllChannelsResult;
+
 import org.awaitility.Awaitility;
 import org.jetbrains.annotations.NotNull;
 import org.junit.After;
@@ -120,7 +121,7 @@ public class AllChannelsChannelGroupEndpointTest extends TestHarness {
 
         final AtomicInteger atomic = new AtomicInteger(0);
 
-        partialAllChannelsChannelGroup.channelGroup("groupA").async(new PNCallback<PNChannelGroupsAllChannelsResult>() {
+        partialAllChannelsChannelGroup.channelGroup("groupA").async(new PNResultCallback<PNChannelGroupsAllChannelsResult>() {
             @Override
             public void onResponse(PNChannelGroupsAllChannelsResult result, @NotNull PNStatus status) {
                 if (status != null && status.getOperation() == PNOperationType.PNChannelsForGroupOperation) {

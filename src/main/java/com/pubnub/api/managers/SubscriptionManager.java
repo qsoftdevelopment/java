@@ -5,7 +5,7 @@ import com.pubnub.api.builder.dto.PresenceOperation;
 import com.pubnub.api.builder.dto.StateOperation;
 import com.pubnub.api.builder.dto.SubscribeOperation;
 import com.pubnub.api.builder.dto.UnsubscribeOperation;
-import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.callbacks.PNResultCallback;
 import com.pubnub.api.callbacks.ReconnectionCallback;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.endpoints.presence.Heartbeat;
@@ -190,7 +190,7 @@ public class SubscriptionManager {
         if (!this.pubnub.getConfiguration().isSupressLeaveEvents() && !presenceOperation.isConnected()) {
             new Leave(pubnub, this.telemetryManager, this.retrofitManager)
                     .channels(presenceOperation.getChannels()).channelGroups(presenceOperation.getChannelGroups())
-                    .async(new PNCallback<Boolean>() {
+                    .async(new PNResultCallback<Boolean>() {
                         @Override
                         public void onResponse(Boolean result, @NotNull PNStatus status) {
                             listenerManager.announce(status);
@@ -209,7 +209,7 @@ public class SubscriptionManager {
         if (!this.pubnub.getConfiguration().isSupressLeaveEvents()) {
             new Leave(pubnub, this.telemetryManager, this.retrofitManager)
                     .channels(unsubscribeOperation.getChannels()).channelGroups(unsubscribeOperation.getChannelGroups())
-                    .async(new PNCallback<Boolean>() {
+                    .async(new PNResultCallback<Boolean>() {
                         @Override
                         public void onResponse(Boolean result, @NotNull PNStatus status) {
                             listenerManager.announce(status);
@@ -276,7 +276,7 @@ public class SubscriptionManager {
                 .filterExpression(pubnub.getConfiguration().getFilterExpression())
                 .state(stateStorage);
 
-        subscribeCall.async(new PNCallback<SubscribeEnvelope>() {
+        subscribeCall.async(new PNResultCallback<SubscribeEnvelope>() {
             @Override
             public void onResponse(SubscribeEnvelope result, @NotNull PNStatus status) {
                 if (status.isError()) {
@@ -374,7 +374,7 @@ public class SubscriptionManager {
                 .channels(channels)
                 .channelGroups(groups);
 
-        heartbeatCall.async(new PNCallback<Boolean>() {
+        heartbeatCall.async(new PNResultCallback<Boolean>() {
             @Override
             public void onResponse(Boolean result, @NotNull PNStatus status) {
                 PNHeartbeatNotificationOptions heartbeatVerbosity =

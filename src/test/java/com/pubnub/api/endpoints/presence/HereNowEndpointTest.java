@@ -4,11 +4,12 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.callbacks.PNResultCallback;
 import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.presence.PNHereNowResult;
+
 import org.awaitility.Awaitility;
 import org.jetbrains.annotations.NotNull;
 import org.junit.After;
@@ -293,7 +294,7 @@ public class HereNowEndpointTest extends TestHarness {
 
         final AtomicInteger atomic = new AtomicInteger(0);
 
-        partialHereNow.async(new PNCallback<PNHereNowResult>() {
+        partialHereNow.async(new PNResultCallback<PNHereNowResult>() {
             @Override
             public void onResponse(PNHereNowResult result, @NotNull PNStatus status) {
                 if (status != null && status.getOperation() == PNOperationType.PNHereNowOperation) {

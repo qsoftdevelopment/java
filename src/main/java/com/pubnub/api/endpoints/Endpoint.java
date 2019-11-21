@@ -6,7 +6,7 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
-import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.callbacks.PNResultCallback;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.managers.MapperManager;
@@ -49,7 +49,7 @@ public abstract class Endpoint<Input, Output> {
     private TelemetryManager telemetryManager;
 
     @Getter(AccessLevel.NONE)
-    private PNCallback<Output> cachedCallback;
+    private PNResultCallback<Output> cachedCallback;
 
     @Getter(AccessLevel.NONE)
     private Call<Input> call;
@@ -127,7 +127,7 @@ public abstract class Endpoint<Input, Output> {
         return response;
     }
 
-    public void async(@NotNull final PNCallback<Output> callback) {
+    public void async(@NotNull final PNResultCallback<Output> callback) {
         cachedCallback = callback;
 
         try {

@@ -4,7 +4,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.callbacks.PNResultCallback;
 import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.models.consumer.PNStatus;
@@ -100,7 +100,7 @@ public class LeaveTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", " +
                         "\"action\": \"leave\"}")));
 
-        instance.channels(Arrays.asList("coolChannel", "coolChannel2")).channelGroups(Arrays.asList("cg1")).async(new PNCallback<Boolean>() {
+        instance.channels(Arrays.asList("coolChannel", "coolChannel2")).channelGroups(Arrays.asList("cg1")).async(new PNResultCallback<Boolean>() {
             @Override
             public void onResponse(Boolean result, @NotNull PNStatus status) {
                 assertEquals(status.getAffectedChannels().get(0), "coolChannel");

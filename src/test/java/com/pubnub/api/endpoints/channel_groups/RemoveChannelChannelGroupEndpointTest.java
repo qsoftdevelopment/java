@@ -4,7 +4,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.callbacks.PNResultCallback;
 import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNStatus;
@@ -100,7 +100,7 @@ public class RemoveChannelChannelGroupEndpointTest extends TestHarness {
 
         final AtomicInteger atomic = new AtomicInteger(0);
 
-        partialRemoveChannelChannelGroup.channelGroup("groupA").channels(Arrays.asList("ch1", "ch2")).async(new PNCallback<PNChannelGroupsRemoveChannelResult>() {
+        partialRemoveChannelChannelGroup.channelGroup("groupA").channels(Arrays.asList("ch1", "ch2")).async(new PNResultCallback<PNChannelGroupsRemoveChannelResult>() {
             @Override
             public void onResponse(PNChannelGroupsRemoveChannelResult result, @NotNull PNStatus status) {
                 if (status != null && status.getOperation() == PNOperationType.PNRemoveChannelsFromGroupOperation) {

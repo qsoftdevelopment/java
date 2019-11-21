@@ -4,7 +4,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.callbacks.PNResultCallback;
 import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNPushType;
@@ -114,7 +114,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
 
         final AtomicInteger atomic = new AtomicInteger(0);
 
-        instance.deviceId("niceDevice").pushType(PNPushType.MPNS).async(new PNCallback<PNPushRemoveAllChannelsResult>() {
+        instance.deviceId("niceDevice").pushType(PNPushType.MPNS).async(new PNResultCallback<PNPushRemoveAllChannelsResult>() {
             @Override
             public void onResponse(PNPushRemoveAllChannelsResult result, @NotNull PNStatus status) {
                 if (status != null && status.getOperation() == PNOperationType.PNRemoveAllPushNotificationsOperation) {
@@ -250,7 +250,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
 
         instanceAdd.deviceId("niceDevice").pushType(PNPushType.MPNS)
                 .channels(Arrays.asList("ch1", "ch2", "ch3"))
-                .async(new PNCallback<PNPushAddChannelResult>() {
+                .async(new PNResultCallback<PNPushAddChannelResult>() {
                     @Override
                     public void onResponse(PNPushAddChannelResult result, @NotNull PNStatus status) {
                         if (status != null && status.getOperation() == PNOperationType.PNPushNotificationEnabledChannelsOperation) {
@@ -412,7 +412,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         final AtomicInteger atomic = new AtomicInteger(0);
 
         instanceRemove.deviceId("niceDevice").pushType(PNPushType.MPNS)
-                .channels(Arrays.asList("chr1", "chr2", "chr3")).async(new PNCallback<PNPushRemoveChannelResult>() {
+                .channels(Arrays.asList("chr1", "chr2", "chr3")).async(new PNResultCallback<PNPushRemoveChannelResult>() {
             @Override
             public void onResponse(PNPushRemoveChannelResult result, @NotNull PNStatus status) {
                 if (status != null && status.getOperation() == PNOperationType.PNRemovePushNotificationsFromChannelsOperation) {

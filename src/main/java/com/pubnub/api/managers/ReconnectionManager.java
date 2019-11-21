@@ -1,7 +1,7 @@
 package com.pubnub.api.managers;
 
 import com.pubnub.api.PubNub;
-import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.callbacks.PNResultCallback;
 import com.pubnub.api.callbacks.ReconnectionCallback;
 import com.pubnub.api.enums.PNReconnectionPolicy;
 import com.pubnub.api.models.consumer.PNStatus;
@@ -106,7 +106,7 @@ public class ReconnectionManager {
 
     private void callTime() {
         try {
-            pubnub.time().async(new PNCallback<PNTimeResult>() {
+            pubnub.time().async(new PNResultCallback<PNTimeResult>() {
                 @Override
                 public void onResponse(PNTimeResult result, @NotNull PNStatus status) {
                     if (!status.isError()) {

@@ -4,7 +4,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.callbacks.PNResultCallback;
 import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNStatus;
@@ -977,7 +977,7 @@ public class GrantEndpointTest extends TestHarness {
                         "Manager\",\"status\":200}")));
 
         partialGrant.authKeys(Collections.singletonList("key1")).channels(Collections.singletonList("ch1")).async(
-                new PNCallback<PNAccessManagerGrantResult>() {
+                new PNResultCallback<PNAccessManagerGrantResult>() {
                     @Override
                     public void onResponse(PNAccessManagerGrantResult result, @NotNull PNStatus status) {
                         if (status != null && status.getOperation() == PNOperationType.PNAccessManagerGrant) {
@@ -1131,7 +1131,7 @@ public class GrantEndpointTest extends TestHarness {
                         "\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}},\"service\":\"Access " +
                         "Manager\",\"status\":200}")));
 
-        partialGrant.channels(Collections.singletonList("ch1")).async(new PNCallback<PNAccessManagerGrantResult>() {
+        partialGrant.channels(Collections.singletonList("ch1")).async(new PNResultCallback<PNAccessManagerGrantResult>() {
             @Override
             public void onResponse(PNAccessManagerGrantResult result, @NotNull PNStatus status) {
                 if (status != null && status.getOperation() == PNOperationType.PNAccessManagerGrant

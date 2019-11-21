@@ -4,7 +4,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.callbacks.PNResultCallback;
 import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNPushType;
@@ -112,7 +112,7 @@ public class ListPushProvisionsTest extends TestHarness {
 
         final AtomicInteger atomic = new AtomicInteger(0);
 
-        instance.deviceId("niceDevice").pushType(PNPushType.APNS).async(new PNCallback<PNPushListProvisionsResult>() {
+        instance.deviceId("niceDevice").pushType(PNPushType.APNS).async(new PNResultCallback<PNPushListProvisionsResult>() {
             @Override
             public void onResponse(PNPushListProvisionsResult result, @NotNull PNStatus status) {
                 if (status != null && status.getOperation() == PNOperationType.PNPushNotificationEnabledChannelsOperation) {
