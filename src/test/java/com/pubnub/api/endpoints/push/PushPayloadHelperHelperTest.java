@@ -39,7 +39,7 @@ public class PushPayloadHelperHelperTest extends TestHarness {
     }
 
     @Test
-    public void testNPayloads_Null() {
+    public void testPayloads_Null() {
         PushPayloadHelper pushPayloadHelper = new PushPayloadHelper();
 
         pushPayloadHelper.setApnsPayload(null);
@@ -72,7 +72,7 @@ public class PushPayloadHelperHelperTest extends TestHarness {
         PushPayloadHelper.APNSPayload apnsPayload = new PushPayloadHelper.APNSPayload();
 
         apnsPayload.setAps(new PushPayloadHelper.APNSPayload.APS());
-        apnsPayload.setPnPushItems(new ArrayList<>());
+        apnsPayload.setApns2Configurations(new ArrayList<>());
 
         Map<String, Object> map = pushPayloadHelper.build();
 
@@ -95,7 +95,7 @@ public class PushPayloadHelperHelperTest extends TestHarness {
         customMap.put("key_3", null);
 
         apnsPayload.setAps(aps);
-        apnsPayload.setPnPushItems(new ArrayList<>());
+        apnsPayload.setApns2Configurations(new ArrayList<>());
         apnsPayload.setCustom(customMap);
 
         pushPayloadHelper.setApnsPayload(apnsPayload);
@@ -152,83 +152,83 @@ public class PushPayloadHelperHelperTest extends TestHarness {
     public void testApple_PnPushArray() {
         PushPayloadHelper pushPayloadHelper = new PushPayloadHelper();
 
-        PushPayloadHelper.APNSPayload.PNPush.PNPushTarget pnPushTarget1 =
-                new PushPayloadHelper.APNSPayload.PNPush.PNPushTarget()
+        PushPayloadHelper.APNSPayload.APNS2Configuration.Target target1 =
+                new PushPayloadHelper.APNSPayload.APNS2Configuration.Target()
                         .setEnvironment(PNPushEnvironment.DEVELOPMENT)
                         .setTopic("topic_1");
 
-        PushPayloadHelper.APNSPayload.PNPush.PNPushTarget pnPushTarget2 =
-                new PushPayloadHelper.APNSPayload.PNPush.PNPushTarget()
+        PushPayloadHelper.APNSPayload.APNS2Configuration.Target target2 =
+                new PushPayloadHelper.APNSPayload.APNS2Configuration.Target()
                         .setEnvironment(PNPushEnvironment.PRODUCTION);
 
-        PushPayloadHelper.APNSPayload.PNPush.PNPushTarget pnPushTarget3 =
-                new PushPayloadHelper.APNSPayload.PNPush.PNPushTarget()
+        PushPayloadHelper.APNSPayload.APNS2Configuration.Target target3 =
+                new PushPayloadHelper.APNSPayload.APNS2Configuration.Target()
                         .setEnvironment(PNPushEnvironment.PRODUCTION)
                         .setTopic("topic_3")
                         .setExcludeDevices(Arrays.asList("ex_1", "ex_2"));
 
-        PushPayloadHelper.APNSPayload.PNPush.PNPushTarget pnPushTarget4 =
-                new PushPayloadHelper.APNSPayload.PNPush.PNPushTarget()
+        PushPayloadHelper.APNSPayload.APNS2Configuration.Target target4 =
+                new PushPayloadHelper.APNSPayload.APNS2Configuration.Target()
                         .setEnvironment(null)
                         .setTopic(null)
                         .setExcludeDevices(null);
 
-        PushPayloadHelper.APNSPayload.PNPush.PNPushTarget pnPushTarget5 =
-                new PushPayloadHelper.APNSPayload.PNPush.PNPushTarget()
+        PushPayloadHelper.APNSPayload.APNS2Configuration.Target target5 =
+                new PushPayloadHelper.APNSPayload.APNS2Configuration.Target()
                         .setEnvironment(PNPushEnvironment.PRODUCTION)
                         .setTopic("topic_5")
                         .setExcludeDevices(Arrays.asList());
 
-        PushPayloadHelper.APNSPayload.PNPush.PNPushTarget pnPushTarget6 =
-                new PushPayloadHelper.APNSPayload.PNPush.PNPushTarget()
+        PushPayloadHelper.APNSPayload.APNS2Configuration.Target target6 =
+                new PushPayloadHelper.APNSPayload.APNS2Configuration.Target()
                         .setTopic("topic_6")
                         .setExcludeDevices(null);
 
-        PushPayloadHelper.APNSPayload.PNPush.PNPushTarget pnPushTarget7 =
-                new PushPayloadHelper.APNSPayload.PNPush.PNPushTarget();
+        PushPayloadHelper.APNSPayload.APNS2Configuration.Target target7 =
+                new PushPayloadHelper.APNSPayload.APNS2Configuration.Target();
 
-        PushPayloadHelper.APNSPayload.PNPush pnPushItem1 = new PushPayloadHelper.APNSPayload.PNPush()
+        PushPayloadHelper.APNSPayload.APNS2Configuration apns2Config1 = new PushPayloadHelper.APNSPayload.APNS2Configuration()
                 .setCollapseId("collapse_1")
                 .setExpiration("exp_1")
                 .setVersion("v1")
                 .setTargets(null);
 
-        PushPayloadHelper.APNSPayload.PNPush pnPushItem2 = new PushPayloadHelper.APNSPayload.PNPush()
+        PushPayloadHelper.APNSPayload.APNS2Configuration apns2Config2 = new PushPayloadHelper.APNSPayload.APNS2Configuration()
                 .setCollapseId("collapse_2")
                 .setExpiration("exp_2")
                 .setVersion("v2")
                 .setTargets(new ArrayList<>());
 
-        PushPayloadHelper.APNSPayload.PNPush pnPushItem3 = new PushPayloadHelper.APNSPayload.PNPush()
+        PushPayloadHelper.APNSPayload.APNS2Configuration apns2Config3 = new PushPayloadHelper.APNSPayload.APNS2Configuration()
                 .setCollapseId(null)
                 .setExpiration("")
                 .setVersion("v3")
                 .setTargets(Arrays.asList(
-                        pnPushTarget1,
-                        pnPushTarget2,
-                        pnPushTarget3,
-                        pnPushTarget4,
-                        pnPushTarget5,
-                        pnPushTarget6,
-                        pnPushTarget7
+                        target1,
+                        target2,
+                        target3,
+                        target4,
+                        target5,
+                        target6,
+                        target7
                 ));
 
-        PushPayloadHelper.APNSPayload.PNPush pnPushItem4 = new PushPayloadHelper.APNSPayload.PNPush()
+        PushPayloadHelper.APNSPayload.APNS2Configuration apns2Config4 = new PushPayloadHelper.APNSPayload.APNS2Configuration()
                 .setCollapseId(null)
                 .setExpiration(null)
                 .setVersion(null);
 
-        PushPayloadHelper.APNSPayload.PNPush pnPushItem5 = new PushPayloadHelper.APNSPayload.PNPush();
+        PushPayloadHelper.APNSPayload.APNS2Configuration apns2Config5 = new PushPayloadHelper.APNSPayload.APNS2Configuration();
 
         PushPayloadHelper.APNSPayload apnsPayload = new PushPayloadHelper.APNSPayload();
 
-        List<PushPayloadHelper.APNSPayload.PNPush> items = new ArrayList<>();
-        items.add(pnPushItem1);
-        items.add(pnPushItem2);
-        items.add(pnPushItem3);
-        items.add(pnPushItem4);
-        items.add(pnPushItem5);
-        apnsPayload.setPnPushItems(items);
+        List<PushPayloadHelper.APNSPayload.APNS2Configuration> apns2Configurations = new ArrayList<>();
+        apns2Configurations.add(apns2Config1);
+        apns2Configurations.add(apns2Config2);
+        apns2Configurations.add(apns2Config3);
+        apns2Configurations.add(apns2Config4);
+        apns2Configurations.add(apns2Config5);
+        apnsPayload.setApns2Configurations(apns2Configurations);
 
         pushPayloadHelper.setApnsPayload(apnsPayload);
 

@@ -51,7 +51,7 @@ public class PushPayloadHelper {
     @Accessors(chain = true)
     public static class APNSPayload implements PushPayloadSerializer {
         private APS aps;
-        private List<PNPush> pnPushItems;
+        private List<APNS2Configuration> apns2Configurations;
         private Map<String, Object> custom;
 
         @Override
@@ -63,10 +63,10 @@ public class PushPayloadHelper {
                     map.put("aps", apsMap);
                 }
             }
-            if (pnPushItems != null) {
+            if (apns2Configurations != null) {
                 List<Map<String, Object>> pnPushArray = new ArrayList<>();
-                for (PNPush pnPushItem : pnPushItems) {
-                    Map<String, Object> pushItemMap = pnPushItem.toMap();
+                for (APNS2Configuration configuration : apns2Configurations) {
+                    Map<String, Object> pushItemMap = configuration.toMap();
                     if (pushItemMap != null && !pushItemMap.isEmpty()) {
                         pnPushArray.add(pushItemMap);
                     }
@@ -102,10 +102,10 @@ public class PushPayloadHelper {
 
         @Setter
         @Accessors(chain = true)
-        public static class PNPush implements PushPayloadSerializer {
+        public static class APNS2Configuration implements PushPayloadSerializer {
             private String collapseId;
             private String expiration;
-            private List<PNPushTarget> targets;
+            private List<Target> targets;
             private String version;
 
             @Override
@@ -121,7 +121,7 @@ public class PushPayloadHelper {
 
                 if (targets != null && !targets.isEmpty()) {
                     List<Map<String, Object>> targetsList = new ArrayList<>();
-                    for (PNPushTarget target : targets) {
+                    for (Target target : targets) {
                         Map<String, Object> targetMap = target.toMap();
                         if (targetMap != null && !targetMap.isEmpty()) {
                             targetsList.add(targetMap);
@@ -139,7 +139,7 @@ public class PushPayloadHelper {
 
             @Setter
             @Accessors(chain = true)
-            public static class PNPushTarget implements PushPayloadSerializer {
+            public static class Target implements PushPayloadSerializer {
                 private String topic;
                 private List<String> excludeDevices;
                 private PNPushEnvironment environment;
