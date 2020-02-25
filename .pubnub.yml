@@ -15,7 +15,7 @@ changelog:
       - type: improvement
         text: Improved interaction with classes from org.json*
       - type: improvement
-        text: Callback interface
+        text: Made PNCallback eligible for SAM/lambda conversion
   - version: v4.30.0
     date: 2020-01-23
     changes:
