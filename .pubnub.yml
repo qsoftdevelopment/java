@@ -16,6 +16,8 @@ changelog:
         text: Improved interaction with classes from org.json*
       - type: improvement
         text: Made PNCallback eligible for SAM/lambda conversion
+      - type: improvement
+        text: Deprecated PNPushType.GCM in favor of PNPushType.FCM
   - version: v4.30.0
     date: 2020-01-23
     changes:
